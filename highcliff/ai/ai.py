@@ -1,13 +1,12 @@
 # copying the state of the world for reflection
 import copy
+# the goals the ai is to pursue
+import goals
 
 from highcliff.actions.actions import ActionStatus
 
 # AI, GOAP
 from goap.planner import RegressivePlanner
-
-# throughout his life, charlie will pursue the following goals
-goals = {"is_room_temperature_comfortable": True}
 
 
 # these are the things charlie is capable of doing
