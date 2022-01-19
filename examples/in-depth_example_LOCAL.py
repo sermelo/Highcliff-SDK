@@ -1,17 +1,21 @@
 # needed to run a local version of the AI
 from highcliff.ai import AI
 
+# the Highcliff action you wish to implement
 from highcliff.exampleactions import MonitorBodyTemperature, ChangeRoomTemperature, AuthorizeRoomTemperatureChange, \
     AlertCareProvider, LogBodyTemperatureData
 
-# define the state of the world and the ai capabilities. when there is a central infrastructure available,
-# these statements will be replaced with a url to the infrastructure
+# needed to pretty-print the AI's execution logs
+from pprint import pprint
+
+# define the state of the world and the ai capabilities.
+# when running a local version of Highcliff, use global variables to simulate underlying infrastructure
+# these global variables will be replaced with urls in the production version
 the_world_GLOBAL_VARIABLE = {"is_body_temperature_monitored": False, "is_room_temperature_comfortable": False}
 capabilities_GLOBAL_VARIABLE = []
 
 
-# hack together simulations of thermometers, UIs, etc
-# launch the simulations
+# build functionality by writing custom behavior for your selected actions
 class SimulatedMessagingApp(AlertCareProvider):
     def behavior(self):
         print("Tell Francis that the room temperature will be raised because Peter is cold")
@@ -59,8 +63,11 @@ class AcmeTemperatureMonitor(MonitorBodyTemperature):
 AcmeTemperatureMonitor(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
 
 
-# run the ai. when there is a central infrastructure available, this code will be run on the infrastructure
-# and the following statements will not be necessary
+# run a local version of Highcliff
 ai_life_span_in_iterations = 3
 goals = {"is_room_temperature_comfortable": True}
-AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+highcliff = AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+
+# check the execution logs
+print()
+pprint(highcliff.diary())

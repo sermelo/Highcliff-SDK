@@ -94,3 +94,6 @@ class AI:
         # high-level brain function: action and introspection
         action_status, world_state_after = self.__act(plan)
         self.__reflect(goal, world_state_before, plan, action_status, world_state_after)
+
+    def diary(self):
+        return self.__diary

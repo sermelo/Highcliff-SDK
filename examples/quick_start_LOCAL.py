@@ -4,6 +4,9 @@ from highcliff.ai import AI
 # the Highcliff action you wish to implement
 from highcliff.exampleactions import AuthorizeRoomTemperatureChange
 
+# needed to pretty-print the AI's execution logs
+from pprint import pprint
+
 # define the state of the world and the ai capabilities.
 # when running a local version of Highcliff, use global variables to simulate underlying infrastructure
 # these global variables will be replaced with urls in the production version
@@ -26,4 +29,8 @@ SimulatedUserInterface(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
 # run a local version of Highcliff
 ai_life_span_in_iterations = 1
 goals = {"is_room_temperature_change_authorized": True}
-AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+highcliff = AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+
+# check the execution logs
+print()
+pprint(highcliff.diary())
