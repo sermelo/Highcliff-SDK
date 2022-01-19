@@ -1,1 +1,1 @@
-from actions import AIaction, ActionStatus
+from highcliff.actions.actions import AIaction, ActionStatus

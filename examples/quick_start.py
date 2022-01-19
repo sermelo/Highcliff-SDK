@@ -18,7 +18,7 @@ class SimulatedMessagingApp(AlertCareProvider):
         return self.effects
 
 
-SimulatedMessagingApp()
+SimulatedMessagingApp(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
 
 
 class SimulatedSmartThermometer(ChangeRoomTemperature):
@@ -27,7 +27,7 @@ class SimulatedSmartThermometer(ChangeRoomTemperature):
         return self.effects
 
 
-SimulatedSmartThermometer()
+SimulatedSmartThermometer(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
 
 
 class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
@@ -37,7 +37,7 @@ class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
         return self.effects
 
 
-SimulatedUserInterface()
+SimulatedUserInterface(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
 
 
 class SimulatedDataLogger(LogBodyTemperatureData):
@@ -46,9 +46,21 @@ class SimulatedDataLogger(LogBodyTemperatureData):
         return self.effects
 
 
-SimulatedDataLogger()
+SimulatedDataLogger(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
+
+
+class AcmeTemperatureMonitor(MonitorBodyTemperature):
+    def behavior(self):
+        print("The ACME temperature sensor is active on Peter's wrist")
+        print("The ACME temperature sensor is keeping track of Peter's body temperature")
+        return self.effects
+
+
+AcmeTemperatureMonitor(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
+
 
 # run the ai. when there is a central infrastructure available, this code will be run on the infrastructure
 # and the following statements will not be necessary
 ai_life_span_in_iterations = 3
-AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, ai_life_span_in_iterations)
+goals = {"is_room_temperature_comfortable": True}
+AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)

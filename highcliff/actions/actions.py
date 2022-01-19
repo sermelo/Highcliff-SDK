@@ -9,20 +9,31 @@ class AIaction(Action):
     # the effect that the action actually had on the world
     actual_effects = {}
 
-    def __init__(self):
+    # these references to global variables should be replaced with a url to central infrastructure
+    __the_world_GLOBAL_VARIABLE = {}
+    __capabilities_GLOBAL_VARIABLE = []
+
+    def __init__(self, the_world_global_variable, capabilities_global_variable):
+        # set the state of the world
+        # a global variable is used to simulate a central message queue
+        self.__the_world_GLOBAL_VARIABLE = the_world_global_variable
+
+        # set the available capabilities
+        # a global variable is used to simulate a central message queue
+        self.__capabilities_GLOBAL_VARIABLE = capabilities_global_variable
+
         # an action integrates itself with the communication infrastructure
         self.__integrate()
 
     def __integrate(self):
         # this is where we will put the code to connect with the (AWS) infrastructure
         # as part of integration, an action registers itself as a capability for charlie
-        capabilities.append(self)
+        self.__capabilities_GLOBAL_VARIABLE.append(self)
 
-    @staticmethod
-    def __update_the_world(update):
+    def __update_the_world(self, update):
         # an action handles alerting the network of changes that it made
         # this is where we will put code to publish messages to the (AWS) infrastructure
-        the_world_GLOBAL_VARIABLE.update(update)
+        self.__the_world_GLOBAL_VARIABLE.update(update)
 
     def act(self):
         # every AI action runs custom behavior, updates the world, and returns a result
