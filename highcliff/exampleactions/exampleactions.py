@@ -1,4 +1,4 @@
-from highcliff.actions.actions import AIaction
+from highcliff.actions import AIaction
 
 
 class MonitorBodyTemperature(AIaction):

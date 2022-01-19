@@ -4,13 +4,6 @@ from goap.action import Action
 # defines action status
 from enum import Enum
 
-# these are the things charlie is capable of doing
-capabilities = []
-
-# set the current state of the world
-# a global variable is used to simulate a central message queue
-the_world_GLOBAL_VARIABLE = {}
-
 
 class AIaction(Action):
     # the effect that the action actually had on the world
