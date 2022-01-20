@@ -9,6 +9,15 @@ The intended technical environment is a network of smart things integrated using
 
 The SDK provides (and hides from smart-thing developers) the infrastructure integration required of all smart things. The SDK takes care of publishing and subscribing to a central message queue. The SDK (specifically, the AI known as Highcliff) determines when to call an action. The SDK handles registering smart things and making them known in the network. It handles reading and updating the shared world view. With the SDK, the smart thing developer need only include the appropriate SDK classes and implement the appropriate custom behavior.
 
+### Using the SDK
+The SDK is a set of classes that represent all meaningful actions that can be taken by smart things in the network. Every meaningful action that can be taken by a smart thing has (or should have) a corresponding SDK class. A smart thing participates in the network by implementing action classes. Specifically, the developer implements custom behavior of the action class. As part of the SDK, the acton class tells the AI the intended effect of the action and the preconditions for executing the action. The AI uses this information to organize actions into plans for accomplishing goals.
+
+### The Highcliff AI
+Highcliff is the artificial intelligence that provides communication and intelligent orchestration of every smart thing in the network. Highcliff's AI is based on Goal-Oriented Action Programming (GOAP). GOAP is a technique often applied to providing intelligent behavior to non-player characters in video games. Being based on GOAP, Highcliff's AI is goal-driven, rather than data driven. Highcliff'S intelligence comes from his ability to organize dynamic lists of actions into plans that achieve goals, rather than his ability to learn from large data sets.
+
+Highcliff is given a static set of goals designed to maintain a person's wellbeing. Highcliff percieves the environment, decides which of his goals are not met, and chooses a goal to pursue. Highcliff reasons about his goal and organizes his available resources into a plan. Highcliff acts on his plan, monitors the results of his actions and reflects (using a diary) on the entire process.
+
+
 ## Quick Start
 1. Clone the repository
 2. Run `\examples\quick_start_LOCAL.py`
