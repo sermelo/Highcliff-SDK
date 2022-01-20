@@ -38,3 +38,18 @@ the_world_GLOBAL_VARIABLE = {"is_room_temperature_change_authorized": False, "is
 capabilities_GLOBAL_VARIABLE = []
 ```
 
+Write the custom behavior for any action that you imported.
+
+```
+class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
+    def behavior(self):
+        print("Ask Peter if he's okay with raising the temperature in the room")
+        print("Peter gave the okay to raise the room's temperature")
+        return self.effects
+```
+
+Instantiate your new action. When running locally, the action should be instantiated using the global variables that simulate central infrastructure.
+
+```
+SimulatedUserInterface(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
+```
