@@ -17,6 +17,7 @@ Peter gave the okay to raise the room's temperature
   'the_world_state_before': {'is_room_temperature_change_authorized': False,
                              'is_room_temperature_comfortable': False}}]
 ```
+### Explaining the Quick Start
 
 To use this SDK and run your solution on your local machine, start by importing the Highcliff AI and the specific Highcliff actions you intend to implement.
 
@@ -54,7 +55,7 @@ Instantiate your new action. When running locally, the action should be instanti
 SimulatedUserInterface(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
 ```
 
-Instantiate and run the Highcliff AI. When running locally, the AI should be instantiated uising the global variables that simulate ventral infrastructure.
+Instantiate and run the Highcliff AI. When running locally, the AI should be instantiated uising the global variables that simulate central infrastructure.
 
 ```
 ai_life_span_in_iterations = 1
