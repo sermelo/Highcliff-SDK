@@ -19,9 +19,10 @@ Highcliff is given a static set of goals designed to maintain a person's wellbei
 
 
 ## Quick Start
-1. Clone the repository
-2. Run `\examples\quick_start_LOCAL.py`
-3. You should see the following output:
+1. Install Python
+1. Clone this repository
+1. Run `\examples\quick_start_LOCAL.py`
+1. You should see the following output:
 ```
 Ask Peter if he's okay with raising the temperature in the room
 Peter gave the okay to raise the room's temperature
