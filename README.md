@@ -128,3 +128,12 @@ The AI will select a goal, create a plan, and (if properly configured) select an
 Ask Peter if he's okay with raising the temperature in the room
 Peter gave the okay to raise the room's temperature
 ```
+
+## Roadmap
+
+- [ ] Release the beta Python version
+- [ ] Test the beta Python version in a full hackathon
+- [ ] Release version 1
+- [ ] Release versions in other languages
+  - [ ] c#
+  - [ ] node.js
