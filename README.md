@@ -1,6 +1,14 @@
 # SDK-Python
 Python version of a microservice Software Development Kit (SDK) for the Foundation System
 
+## Overview
+
+The goal of this project is to speed the development of an intelligent, automomous environment that looks after the well being of the severly disabled. The environment should constantly monitor, anticipate and adapt itself to the person's changing needs.
+
+The intended technical environment is a network of smart things integrated using a central message queue. Every smart thing participating in the network must be capable of publishing and subscribing to a central message queue. Smart things must use messages to and from the queue to coordinate their actions. Each smart thing must be capable of making itself known to other participants in the network. They must also be capable of reading and contributing to the collective state of the network-- a shared world view. Every smart thing must be capable of taking action, communicating the success or failure of the action, and updating the shared world view based on the outcome of that acton.
+
+The SDK provides (and hides from smart-thing developers) the infrastructure integration required of all smart things. The SDK takes care of publishing and subscribing to a central message queue. The SDK (specifically, the AI known as Highcliff) determines when to call an action. The SDK handles registering smart things and making them known in the network. It handles reading and updating the shared world view. With the SDK, the smart thing developer need only include the appropriate SDK classes and implement the appropriate custom behavior.
+
 ## Quick Start
 1. Clone the repository
 2. Run `\examples\quick_start_LOCAL.py`
