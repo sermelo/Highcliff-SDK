@@ -17,3 +17,24 @@ Peter gave the okay to raise the room's temperature
   'the_world_state_before': {'is_room_temperature_change_authorized': False,
                              'is_room_temperature_comfortable': False}}]
 ```
+
+To use this SDK and run your solution on your local machine, start by importing the Highcliff AI and the specific Highcliff actions you intend to implement.
+
+```
+# needed to run a local version Highcliff
+from highcliff.ai import AI
+
+# the Highcliff action you wish to implement
+from highcliff.exampleactions import AuthorizeRoomTemperatureChange
+
+# needed to pretty-print the AI's execution logs
+from pprint import pprint
+```
+
+Create global variables that represent the state of the world and the actions that the AI is capable of executing. These variables are used by the SDK to simulate a connection to a central infrastructure responsible for providing the same information.
+
+```
+the_world_GLOBAL_VARIABLE = {"is_room_temperature_change_authorized": False, "is_room_temperature_comfortable": False}
+capabilities_GLOBAL_VARIABLE = []
+```
+
