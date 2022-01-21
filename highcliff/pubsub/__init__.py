@@ -1,1 +1,1 @@
-from highcliff.pubsub.pubsub import create_topic, publish, subscribe
+from highcliff.pubsub.pubsub import create_topic, publish, subscribe, InvalidMessageFormat
