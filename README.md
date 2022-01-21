@@ -21,7 +21,7 @@ Highcliff is given a static set of goals designed to maintain a person's wellbei
 ## Quick Start
 1. Install Python
 1. Clone this repository
-1. Run `\examples\quick_start_LOCAL.py`
+1. Run `\examples\smart_thing_quick_start_LOCAL.py`
 1. You should see the following output:
 ```
 Ask Peter if he's okay with raising the temperature in the room
