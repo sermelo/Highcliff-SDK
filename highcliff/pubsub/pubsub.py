@@ -22,7 +22,10 @@ def create_topic(queue_global_variable, topic):
 def publish(queue_global_variable, the_world_global_variable, topic, message):
     __validate_message(message)
 
-    # TODO: update the world with the effect associated with the message
+    for effect in message["effects"]:
+        for key in effect:
+            the_world_global_variable[key] = effect[key]
+
     # call each callback function registered under the given topic
     for callback in queue_global_variable[topic]:
         callback(topic, message)

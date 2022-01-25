@@ -22,4 +22,8 @@ def callback(topic, message):
 subscribe(queue_GLOBAL_VARIABLE, topic_something_on_my_ear, callback)
 
 # publish a message to the topic
-publish(queue_GLOBAL_VARIABLE, the_world_GLOBAL_VARIABLE, topic_something_on_my_ear, "this is a test message")
+message = {
+    "payload": "this is a test message",
+    "effects": [{"first_effect": True}, {"second_effect": True}]
+}
+publish(queue_GLOBAL_VARIABLE, the_world_GLOBAL_VARIABLE, topic_something_on_my_ear, message)
