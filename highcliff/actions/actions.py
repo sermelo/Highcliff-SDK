@@ -30,7 +30,7 @@ class AIaction(Action):
         # as part of integration, an action registers itself as a capability for charlie
         self.__capabilities_GLOBAL_VARIABLE.append(self)
 
-    def __update_the_world(self, update):
+    def update_the_world(self, update):
         # an action handles alerting the network of changes that it made
         # this is where we will put code to publish messages to the (AWS) infrastructure
         self.__the_world_GLOBAL_VARIABLE.update(update)
@@ -38,7 +38,7 @@ class AIaction(Action):
     def act(self):
         # every AI action runs custom behavior, updates the world, and returns a result
         self.actual_effects = self.behavior()
-        self.__update_the_world(self.actual_effects)
+        self.update_the_world(self.actual_effects)
         return self.actual_effects
 
     def behavior(self):

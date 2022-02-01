@@ -22,6 +22,7 @@ def create_topic(queue_global_variable, topic):
 def publish(queue_global_variable, the_world_global_variable, topic, message):
     __validate_message(message)
 
+    # add the effects associated with the message to the world
     for effect in message["effects"]:
         for key in effect:
             the_world_global_variable[key] = effect[key]
