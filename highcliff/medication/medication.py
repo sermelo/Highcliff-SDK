@@ -10,7 +10,7 @@ class MonitorMedication(AIaction):
         raise NotImplementedError
 
     def __medication_needed(self):
-        # this is called if the custom behavior determines that medication is needed
+        # this should be called by custom behavior if it determines that medication is needed
         super().update_the_world({"medication_needed": True})
         super().update_the_world({"medication_requested": False})
 
@@ -24,7 +24,7 @@ class RequestMedication(AIaction):
         raise NotImplementedError
 
     def __request_failed(self):
-        # this is called if the custom behavior fails to complete the medication request
+        # this should be called by custom behavior if it fails to complete the medication request
         super().update_the_world({"medication_requested": False})
 
 
@@ -37,5 +37,5 @@ class ConfirmMedicationGiven(AIaction):
         raise NotImplementedError
 
     def __confirmation_failed(self):
-        # this is called if the custom behavior fails to confirm that the proper medication was given
+        # this should be by custom behavior if it fails to confirm that the proper medication was given
         super().update_the_world({"medication_needed": True})

@@ -37,6 +37,11 @@ def subscribe(queue_global_variable, topic, callback_function):
     queue_global_variable[topic].append(callback_function)
 
 
+def read(queue_global_variable, topic):
+    # read the topic from the queue and return the result
+    return queue_global_variable[topic]
+
+
 def __validate_message(json_message):
     # validate the schema against the message and raise an error if invalid
     try:
