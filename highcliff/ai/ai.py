@@ -97,3 +97,17 @@ class AI:
 
     def diary(self):
         return self.__diary
+
+
+goals = {
+    "problem_with_airflow": False,
+    "problem_with_bed": False,
+    "problem_with_catheter": False,
+    "problem_with_colostomy_bag": False,
+    "problem_with_eyes": False,
+    "problem_with_humidity": False,
+    "problem_with_lighting": False,
+    "medication_needed": False,
+    "movement_needed": False,
+    "problem_with_temperature": False
+}
