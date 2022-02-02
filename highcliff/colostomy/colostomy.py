@@ -2,7 +2,7 @@ from highcliff.actions.actions import AIaction
 
 
 class MonitorColostomyBag(AIaction):
-    effects = {{"problem_with_colostomy_bag": False}}
+    effects = {"problem_with_colostomy_bag": False}
     preconditions = {}
 
     def behavior(self):
@@ -11,8 +11,8 @@ class MonitorColostomyBag(AIaction):
 
     def __maintenance_needed(self):
         # this should be called by custom behavior if it determines that maintenance is needed
-        super().update_the_world({"problem_with_colostomy_bag": True})
-        super().update_the_world({"colostomy_bag_maintenance_requested": False})
+        self.effects["problem_with_colostomy_bag"] = True
+        self.effects["colostomy_bag_maintenance_requested"] = False
 
 
 class RequestColostomyBagMaintenance(AIaction):
@@ -25,7 +25,7 @@ class RequestColostomyBagMaintenance(AIaction):
 
     def __request_failed(self):
         # this should be called by custom behavior if it fails to complete the maintenance request
-        super().update_the_world({"colostomy_bag_maintenance_requested": False})
+        self.effects["colostomy_bag_maintenance_requested"] = False
 
 
 class ConfirmColostomyBagMaintenance(AIaction):
@@ -38,4 +38,4 @@ class ConfirmColostomyBagMaintenance(AIaction):
 
     def __confirmation_failed(self):
         # this should be by custom behavior if it fails to confirm that the proper maintenance was given
-        super().update_the_world({"problem_with_colostomy_bag": True})
+        self.effects["problem_with_colostomy_bag"] = True

@@ -2,7 +2,7 @@ from highcliff.actions.actions import AIaction
 
 
 class MonitorCatheter(AIaction):
-    effects = {{"problem_with_catheter": False}}
+    effects = {"problem_with_catheter": False}
     preconditions = {}
 
     def behavior(self):
@@ -11,8 +11,8 @@ class MonitorCatheter(AIaction):
 
     def __maintenance_needed(self):
         # this should be called by custom behavior if it determines that maintenance is needed
-        super().update_the_world({"problem_with_catheter": True})
-        super().update_the_world({"catheter_maintenance_requested": False})
+        self.effects["problem_with_catheter"] = True
+        self.effects["catheter_maintenance_requested"] = False
 
 
 class RequestCatheterMaintenance(AIaction):
@@ -25,7 +25,7 @@ class RequestCatheterMaintenance(AIaction):
 
     def __request_failed(self):
         # this should be called by custom behavior if it fails to complete the maintenance request
-        super().update_the_world({"catheter_maintenance_requested": False})
+        self.effects["catheter_maintenance_requested"] = False
 
 
 class ConfirmCatheterMaintenance(AIaction):
@@ -38,4 +38,4 @@ class ConfirmCatheterMaintenance(AIaction):
 
     def __confirmation_failed(self):
         # this should be by custom behavior if it fails to confirm that the proper maintenance was given
-        super().update_the_world({"problem_with_catheter": True})
+        self.effects["problem_with_catheter"] = True
