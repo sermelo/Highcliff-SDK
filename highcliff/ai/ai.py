@@ -19,6 +19,9 @@ class AI:
         # a global variable is used to simulate a central message queue
         self.__the_world_GLOBAL_VARIABLE = the_world_global_variable
 
+        # start by assuming that the state of the world aligns with the goals
+        self.__the_world_GLOBAL_VARIABLE = goals
+
         # set the available capabilities
         # a global variable is used to simulate a central message queue
         self.__capabilities_GLOBAL_VARIABLE = capabilities_global_variable

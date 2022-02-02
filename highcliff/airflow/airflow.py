@@ -9,7 +9,7 @@ class MonitorAirflow(AIaction):
         # decide if medication is needed and update the world accordingly
         raise NotImplementedError
 
-    def __adjustment_needed(self):
+    def adjustment_needed(self):
         # this should be called by custom behavior if it determines that adjustment is needed
         self.effects["problem_with_airflow"] = True
 
