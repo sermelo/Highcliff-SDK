@@ -2,7 +2,7 @@ from highcliff.actions.actions import AIaction
 
 
 class MonitorMedication(AIaction):
-    effects = {{"medication_needed": False}}
+    effects = {"medication_needed": False}
     preconditions = {}
 
     def behavior(self):
@@ -11,8 +11,8 @@ class MonitorMedication(AIaction):
 
     def __medication_needed(self):
         # this should be called by custom behavior if it determines that medication is needed
-        super().update_the_world({"medication_needed": True})
-        super().update_the_world({"medication_requested": False})
+        self.effects["medication_needed"] = True
+        self.effects["medication_requested"] = False
 
 
 class RequestMedication(AIaction):
@@ -25,7 +25,7 @@ class RequestMedication(AIaction):
 
     def __request_failed(self):
         # this should be called by custom behavior if it fails to complete the medication request
-        super().update_the_world({"medication_requested": False})
+        self.effects["medication_requested"] = False
 
 
 class ConfirmMedicationGiven(AIaction):
@@ -38,4 +38,4 @@ class ConfirmMedicationGiven(AIaction):
 
     def __confirmation_failed(self):
         # this should be by custom behavior if it fails to confirm that the proper medication was given
-        super().update_the_world({"medication_needed": True})
+        self.effects["medication_needed"] = True
