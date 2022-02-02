@@ -132,10 +132,8 @@ Ask Peter if he's okay with raising the temperature in the room
 Peter gave the okay to raise the room's temperature
 ```
 
-## Further Reading
-
-### More Examples
-### Unit Tests
+## More Examples
+Unit tests are a good source of example smart-thing development code. Each Python module contains a unit test. The `setUp` method of each test provides an example of how to use the classes in that module. For example...
 
 ## Roadmap
 
