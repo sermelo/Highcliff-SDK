@@ -2,7 +2,7 @@ from highcliff.actions.actions import AIaction
 
 
 class MonitorAirflow(AIaction):
-    effects = {"problem_with_airflow": False}
+    effects = {"monitor_airflow": True, "problem_with_airflow": False}
     preconditions = {}
 
     def behavior(self):
@@ -22,7 +22,7 @@ class AuthorizeAirflowAdjustment(AIaction):
         # custom behavior must be specified by anyone implementing an AI action
         raise NotImplementedError
 
-    def __authorization_failed(self):
+    def authorization_failed(self):
         # this should be by custom behavior if it fails to confirm that the proper maintenance was given
         self.effects["airflow_adjustment_authorized"] = False
         self.effects["problem_with_airflow"] = True

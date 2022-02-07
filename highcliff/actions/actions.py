@@ -7,7 +7,7 @@ from enum import Enum
 
 class AIaction(Action):
     # the effect that the action actually had on the world
-    actual_effects = {}
+    effects = {}
 
     # these references to global variables should be replaced with a url to central infrastructure
     __the_world_GLOBAL_VARIABLE = {}
@@ -37,9 +37,9 @@ class AIaction(Action):
 
     def act(self):
         # every AI action runs custom behavior, updates the world, and returns a result
-        self.actual_effects = self.behavior()
-        self.update_the_world(self.actual_effects)
-        return self.actual_effects
+        self.behavior()
+        self.update_the_world(self.effects)
+        return self.effects
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action

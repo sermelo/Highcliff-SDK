@@ -1,1 +1,1 @@
-from highcliff.ai.ai import AI, goals
+from highcliff.ai.ai import AI

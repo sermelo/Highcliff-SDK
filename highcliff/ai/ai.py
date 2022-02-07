@@ -19,9 +19,6 @@ class AI:
         # a global variable is used to simulate a central message queue
         self.__the_world_GLOBAL_VARIABLE = the_world_global_variable
 
-        # start by assuming that the state of the world aligns with the goals
-        self.__the_world_GLOBAL_VARIABLE = goals
-
         # set the available capabilities
         # a global variable is used to simulate a central message queue
         self.__capabilities_GLOBAL_VARIABLE = capabilities_global_variable
@@ -68,11 +65,6 @@ class AI:
         # walk through the plan and execute it
         for action in plan:
             action.action.act()
-            # compare intended and actual effects, break if the plan is not working
-            plan_is_not_working = action.action.effects != action.action.actual_effects
-            if plan_is_not_working:
-                action_status = ActionStatus.FAIL
-                break
 
         world_state_after = self.__get_world_state()
         return action_status, world_state_after
@@ -100,17 +92,3 @@ class AI:
 
     def diary(self):
         return self.__diary
-
-
-goals = {
-    "problem_with_airflow": False,
-    "problem_with_bed": False,
-    "problem_with_catheter": False,
-    "problem_with_colostomy_bag": False,
-    "problem_with_eyes": False,
-    "problem_with_humidity": False,
-    "problem_with_lighting": False,
-    "medication_needed": False,
-    "movement_needed": False,
-    "problem_with_temperature": False
-}
