@@ -2,7 +2,7 @@ import unittest
 from pprint import pprint
 
 there_is_a_problem_with_airflow = True
-user_denied_request_to_adjust_the_vent = True
+user_denied_request_to_adjust_the_vent = False
 
 capabilities = []
 
@@ -37,6 +37,11 @@ class TestAirflow(unittest.TestCase):
                 else:
                     pass
 
+        # create an actuator capable of adjusting the air vent
+        class AirVentActuator(AdjustAirflow):
+            def behavior(self):
+                pass
+
         # set up the initial state of the world for Highcliff
         # this is only necessary if you are running a local version of Highcliff
         the_world = {
@@ -47,7 +52,7 @@ class TestAirflow(unittest.TestCase):
         # give Highcliff its goals
         goals = {
             "monitor_airflow": True,
-            "problem_with_airflow": False
+            "problem_with_airflow": False,
         }
 
         # instantiate the air vent sensor
@@ -56,8 +61,11 @@ class TestAirflow(unittest.TestCase):
         # instantiate the authorization UI
         AirVentUI(the_world_global_variable=the_world, capabilities_global_variable=capabilities)
 
+        # instantiate the air vent actuator
+        AirVentActuator(the_world_global_variable=the_world, capabilities_global_variable=capabilities)
+
         # run a local version of Highcliff
-        ai_life_span_in_iterations = 1
+        ai_life_span_in_iterations = 4
         self.highcliff = AI(the_world_global_variable=the_world, capabilities_global_variable=capabilities,
                             goals=goals, life_span_in_iterations=ai_life_span_in_iterations)
 

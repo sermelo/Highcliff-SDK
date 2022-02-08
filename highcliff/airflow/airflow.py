@@ -3,7 +3,7 @@ from highcliff.actions.actions import AIaction
 
 class MonitorAirflow(AIaction):
     effects = {"monitor_airflow": True, "problem_with_airflow": False}
-    preconditions = {}
+    preconditions = {"monitor_airflow": False}
 
     def behavior(self):
         # decide if medication is needed and update the world accordingly

@@ -55,16 +55,19 @@ class AI:
 
     def __reason(self, goal, world_state):
         planner = RegressivePlanner(world_state, self.__capabilities_GLOBAL_VARIABLE)
-        plan = planner.find_plan(goal)
+        try:
+            plan = planner.find_plan(goal)
+        except:
+            pass
         return plan
 
     def __act(self, plan):
         # we are optimistic and assume the plan will succeed
         action_status = ActionStatus.SUCCESS
 
-        # walk through the plan and execute it
-        for action in plan:
-            action.action.act()
+        # execute the first act in the plan. the act will affect the world and get us one step closer to the goal
+        # the plan will be updated and actions executed until the goal is reached
+        plan[0].action.act()
 
         world_state_after = self.__get_world_state()
         return action_status, world_state_after
