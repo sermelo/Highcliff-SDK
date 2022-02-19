@@ -9,9 +9,9 @@ from goap.planner import RegressivePlanner
 
 class AI:
     # these are the things the Highcliff AI is capable of doing
-    __the_world_GLOBAL_VARIABLE = {}
-    __capabilities_GLOBAL_VARIABLE = []
-    __goals = {}
+    __the_world_GLOBAL_VARIABLE = None
+    __capabilities_GLOBAL_VARIABLE = None
+    __goals = None
     __diary = []
 
     def __init__(self, the_world_global_variable, capabilities_global_variable, goals, life_span_in_iterations):
@@ -63,17 +63,20 @@ class AI:
         return plan
 
     def __act(self, plan):
-        # we are optimistic and assume the plan will succeed
-        action_status = ActionStatus.SUCCESS
-
         # execute the first act in the plan. the act will affect the world and get us one step closer to the goal
         # the plan will be updated and actions executed until the goal is reached
-        plan[0].action.act()
-
-        #for action in plan:
-            #action.action.act()
+        next_action = plan[0].action
+        next_action.act()
 
         world_state_after = self.__get_world_state()
+        action_had_intended_effect = next_action.effects.items() <= world_state_after.items()
+
+        # the action is a success if the altered world matches the action's intended effect
+        if action_had_intended_effect:
+            action_status = ActionStatus.SUCCESS
+        else:
+            action_status = ActionStatus.FAIL
+
         return action_status, world_state_after
 
     def __reflect(self, goal, world_state_before, plan, action_status, world_state_after):

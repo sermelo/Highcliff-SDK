@@ -10,8 +10,8 @@ class AIaction(Action):
     effects = {}
 
     # these references to global variables should be replaced with a url to central infrastructure
-    __the_world_GLOBAL_VARIABLE = {}
-    __capabilities_GLOBAL_VARIABLE = []
+    __the_world_GLOBAL_VARIABLE = None
+    __capabilities_GLOBAL_VARIABLE = None
 
     def __init__(self, the_world_global_variable, capabilities_global_variable):
         # set the state of the world
