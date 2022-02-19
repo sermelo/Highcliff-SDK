@@ -64,9 +64,10 @@ AcmeTemperatureMonitor(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
 
 
 # run a local version of Highcliff
-ai_life_span_in_iterations = 3
+ai_life_span_in_iterations = 2
 goals = {"is_room_temperature_comfortable": True}
 highcliff = AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+
 
 # check the execution logs
 print()

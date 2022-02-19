@@ -3,8 +3,7 @@ from highcliff.actions import AIaction
 
 class MonitorBodyTemperature(AIaction):
     effects = {"is_body_temperature_monitored": True, "is_room_temperature_comfortable": False}
-    preconditions = {"is_body_temperature_monitored": False,
-                     "log_body_temperature_data": "Body temperature data logged"}
+    preconditions = {"is_body_temperature_monitored": False}
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action
@@ -13,8 +12,7 @@ class MonitorBodyTemperature(AIaction):
 
 class ChangeRoomTemperature(AIaction):
     effects = {"is_room_temperature_comfortable": True}
-    preconditions = {"is_room_temperature_change_authorized": True,
-                     "alert_care_provider": "Room temperature has changed"}
+    preconditions = {"is_room_temperature_change_authorized": True}
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action

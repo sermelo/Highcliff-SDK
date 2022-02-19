@@ -58,7 +58,8 @@ class AI:
         try:
             plan = planner.find_plan(goal)
         except:
-            pass
+            plan = None
+
         return plan
 
     def __act(self, plan):
@@ -68,6 +69,9 @@ class AI:
         # execute the first act in the plan. the act will affect the world and get us one step closer to the goal
         # the plan will be updated and actions executed until the goal is reached
         plan[0].action.act()
+
+        #for action in plan:
+            #action.action.act()
 
         world_state_after = self.__get_world_state()
         return action_status, world_state_after
