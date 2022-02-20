@@ -5,6 +5,10 @@ from infrastructure import LocalInfrastructure
 
 
 class TestInfrastructure(unittest.TestCase):
+    def test_local_infrastructure_reset(self):
+        # TODO: implement this
+        pass
+    
     def test_local_infrastructure(self):
 
         # create two instances of local infrastructures

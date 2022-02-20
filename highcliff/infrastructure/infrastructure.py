@@ -1,4 +1,4 @@
-from singleton import Singleton
+from highcliff.infrastructure.singleton import Singleton
 
 
 class Infrastructure:
@@ -34,3 +34,8 @@ class LocalInfrastructure(Infrastructure):
 
     def add_capability(self, action):
         self.__capabilities.append(action)
+
+    def reset(self):
+        # clears all state
+        self.__the_world = {}
+        self.__capabilities = []

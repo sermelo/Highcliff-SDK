@@ -11,12 +11,11 @@ from highcliff.infrastructure.singleton import Singleton
 
 
 class AI:
-    # TODO: retrofit with the new infrastructure
-    __infrastructure = Infrastructure.instance()
+    __infrastructure = None
     __goals = None
     __diary = []
 
-    def __init__(self, goals, life_span_in_iterations):
+    def __init__(self, infrastructure, goals, life_span_in_iterations):
         # central infrastructure used to coordinate and communicate
         self.__infrastructure = infrastructure
 
@@ -27,8 +26,11 @@ class AI:
 
     def __get_world_state(self):
         # this function returns the current state of the world
-        # here is where we put code to read from the (AWS) infrastructure
-        return self.__infrastructure
+        return self.__infrastructure.the_world()
+
+    def __get_capabilities(self):
+        # this function returns the AI actions registered with the central infrastructure
+        return self.__infrastructure.capabilities()
 
     def __select_goal(self, prioritized_goals):
         # the default is to select an empty goal
@@ -60,7 +62,7 @@ class AI:
         goal = self.__select_goal(self.__goals)
 
         # create a plan to achieve the selected goal
-        planner = RegressivePlanner(self.__get_world_state(), self.__capabilities_GLOBAL_VARIABLE)
+        planner = RegressivePlanner(self.__get_world_state(), self.__get_capabilities())
 
         # start by assuming that there is no plan, the action will have no effect and will fail
         plan = None
