@@ -10,6 +10,7 @@ class AIaction(Action):
     effects = {}
 
     # these references to global variables should be replaced with a url to central infrastructure
+    # TODO: retrofit with the new infrastructure
     __the_world_GLOBAL_VARIABLE = None
     __capabilities_GLOBAL_VARIABLE = None
 

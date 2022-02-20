@@ -6,22 +6,19 @@ from highcliff.actions.actions import ActionStatus
 # AI, GOAP
 from goap.planner import RegressivePlanner
 
+# Needed to define a central infrastructure simulation
+from highcliff.infrastructure.singleton import Singleton
+
 
 class AI:
-    # these are the things the Highcliff AI is capable of doing
-    __the_world_GLOBAL_VARIABLE = None
-    __capabilities_GLOBAL_VARIABLE = None
+    # TODO: retrofit with the new infrastructure
+    __infrastructure = Infrastructure.instance()
     __goals = None
     __diary = []
 
-    def __init__(self, the_world_global_variable, capabilities_global_variable, goals, life_span_in_iterations):
-        # set the state of the world
-        # a global variable is used to simulate a central message queue
-        self.__the_world_GLOBAL_VARIABLE = the_world_global_variable
-
-        # set the available capabilities
-        # a global variable is used to simulate a central message queue
-        self.__capabilities_GLOBAL_VARIABLE = capabilities_global_variable
+    def __init__(self, goals, life_span_in_iterations):
+        # central infrastructure used to coordinate and communicate
+        self.__infrastructure = infrastructure
 
         self.__goals = goals
 
@@ -31,7 +28,7 @@ class AI:
     def __get_world_state(self):
         # this function returns the current state of the world
         # here is where we put code to read from the (AWS) infrastructure
-        return self.__the_world_GLOBAL_VARIABLE
+        return self.__infrastructure
 
     def __select_goal(self, prioritized_goals):
         # the default is to select an empty goal
