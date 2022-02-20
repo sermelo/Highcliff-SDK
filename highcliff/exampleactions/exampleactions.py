@@ -1,9 +1,14 @@
 from highcliff.actions import AIaction
 
+# TODO: change the instance variables of all specific actions
+
 
 class MonitorBodyTemperature(AIaction):
-    effects = {"is_body_temperature_monitored": True, "is_room_temperature_comfortable": False}
-    preconditions = {"is_body_temperature_monitored": False}
+
+    def __init__(self, infrastructure):
+        super().__init__(infrastructure)
+        self.effects = {"is_body_temperature_monitored": True, "is_room_temperature_comfortable": False}
+        self.preconditions = {"is_body_temperature_monitored": False}
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action

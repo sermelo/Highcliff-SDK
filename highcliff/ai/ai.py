@@ -79,10 +79,12 @@ class AI:
 
             # execute the first act in the plan. the act will affect the world and get us one step closer to the goal
             # the plan will be updated and actions executed until the goal is reached
+            intended_effect = next_action.effects.items()
             next_action.act()
 
             # the action is a success if the altered world matches the action's intended effect
-            action_had_intended_effect = next_action.effects.items() <= self.__get_world_state().items()
+            actual_effect = self.__get_world_state().items()
+            action_had_intended_effect = intended_effect <= actual_effect
             if action_had_intended_effect:
                 action_status = ActionStatus.SUCCESS
 

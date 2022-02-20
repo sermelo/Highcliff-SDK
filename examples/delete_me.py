@@ -1,7 +1,7 @@
 import unittest
 
 # needed to connect to the central infrastructure
-from highcliff.infrastructure import LocalInfrastructure
+from highcliff.infrastructure import LocalNetwork
 
 # needed to run a local version of the AI
 from highcliff.ai import AI
@@ -15,16 +15,14 @@ from highcliff.exampleactions import MonitorBodyTemperature
 from pprint import pprint
 
 
-# TODO: retrofit with the new infrastructure
-
 class TestHighcliffExamples(unittest.TestCase):
     def setUp(self):
         # define the infrastructure used to coordinate and communicate
-        self.infrastructure = LocalInfrastructure.instance()
+        self.network = LocalNetwork.instance()
 
     def tearDown(self):
         # reset the infrastructure
-        del self.infrastructure
+        self.network.reset()
 
     def test_custom_behavior_is_required(self):
         # an error should be thrown if an action's custom behavior is not defined
@@ -36,7 +34,7 @@ class TestHighcliffExamples(unittest.TestCase):
         try:
             self.assertRaises(NotImplementedError,
                               InvalidActionClass,
-                              self.infrastructure)
+                              self.network)
         except:
             pass
 
@@ -48,7 +46,7 @@ class TestHighcliffExamples(unittest.TestCase):
                 pass
 
         # instantiate the test action
-        test_action = TestAction(self.infrastructure)
+        test_action = TestAction(self.network)
 
         # check the effects of the test action
         expected_effects = {"is_body_temperature_monitored": True, "is_room_temperature_comfortable": False}
@@ -68,19 +66,19 @@ class TestHighcliffExamples(unittest.TestCase):
 
         # test that the known world is currently empty
         empty_world = {}
-        self.assertEqual(empty_world, self.infrastructure.the_world())
+        self.assertEqual(empty_world, self.network.the_world())
 
         # add a dummy condition to the known world
         dummy_condition = {'dummy_condition': False}
-        self.infrastructure.update_the_world(dummy_condition)
+        self.network.update_the_world(dummy_condition)
 
         # instantiate the test action
-        test_action = TestAction(self.infrastructure)
-        expected_known_world = {**self.infrastructure.the_world(), **test_action.effects}
+        test_action = TestAction(self.network)
+        expected_known_world = {**self.network.the_world(), **test_action.effects}
 
         # take an action and test to see if that action properly affected the world
         test_action.act()
-        self.assertEqual(expected_known_world, self.infrastructure.the_world())
+        self.assertEqual(expected_known_world, self.network.the_world())
 
     def test_action_registers_its_capabilities(self):
         # when an action is instantiated, it should register itself as a capability
@@ -92,14 +90,14 @@ class TestHighcliffExamples(unittest.TestCase):
 
         # test that the capabilities registry is currently empty
         no_capabilities = []
-        self.assertEqual(no_capabilities, self.infrastructure.capabilities())
+        self.assertEqual(no_capabilities, self.network.capabilities())
 
         # instantiate the test action
-        test_action = TestAction(self.infrastructure)
+        test_action = TestAction(self.network)
 
         # test to see if the test action properly registered itself as a new capability
-        self.assertTrue(len(self.infrastructure.capabilities()) == 1)
-        self.assertEqual(test_action, self.infrastructure.capabilities()[0])
+        self.assertTrue(len(self.network.capabilities()) == 1)
+        self.assertEqual(test_action, self.network.capabilities()[0])
 
     def test_action_notifies_success(self):
         # an action that has the intended effect should record a success
@@ -109,20 +107,46 @@ class TestHighcliffExamples(unittest.TestCase):
             def behavior(self):
                 pass
 
-        TestSucceededAction(self.infrastructure)
+        TestSucceededAction(self.network)
 
         # define the test world state and goals
         world_update = {"is_body_temperature_monitored": False}
-        self.infrastructure.update_the_world(world_update)
+        self.network.update_the_world(world_update)
         goals = {"is_body_temperature_monitored": True}
 
         # run a local version of Highcliff
         ai_life_span_in_iterations = 1
-        highcliff = AI(self.infrastructure, goals, ai_life_span_in_iterations)
+        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
 
         # the action should complete unsuccessfully
-        pprint(highcliff.diary())
         self.assertEqual(ActionStatus.SUCCESS, highcliff.diary()[0]['action_status'])
+
+    def test_action_notifies_failure(self):
+        # an action that does not have the intended effect should record a failure
+
+        # define a test action with a behavior failure
+        class TestFailedAction(MonitorBodyTemperature):
+            effects = {}
+
+            def action_failure(self):
+                self.effects['is_body_temperature_monitored'] = False
+
+            def behavior(self):
+                self.action_failure()
+
+        TestFailedAction(self.network)
+
+        # define the test world state and goals
+        world_update = {"is_body_temperature_monitored": False}
+        self.network.update_the_world(world_update)
+        goals = {"is_body_temperature_monitored": True}
+
+        # run a local version of Highcliff
+        ai_life_span_in_iterations = 1
+        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+    #
+    #     # the action should complete unsuccessfully
+    #     self.assertEqual(ActionStatus.FAIL, highcliff.diary()[0]['action_status'])
 
 
 if __name__ == '__main__':

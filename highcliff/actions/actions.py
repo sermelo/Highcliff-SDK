@@ -6,8 +6,6 @@ from enum import Enum
 
 
 class AIaction(Action):
-    # the effect that the action actually had on the world
-    effects = {}
 
     # central infrastructure used for communication and coordination
     __infrastructure = None
@@ -18,6 +16,9 @@ class AIaction(Action):
 
         # an action integrates itself with the communication infrastructure
         self.__integrate()
+
+        # the effect that the action actually had on the world
+        self.effects = {}
 
     def __integrate(self):
         # as part of integration, an action registers itself as a capability for highcliff

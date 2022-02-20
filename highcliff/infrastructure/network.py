@@ -1,7 +1,7 @@
 from highcliff.infrastructure.singleton import Singleton
 
 
-class Infrastructure:
+class Network:
     def __init__(self):
         pass
 
@@ -19,7 +19,7 @@ class Infrastructure:
 
 
 @Singleton
-class LocalInfrastructure(Infrastructure):
+class LocalNetwork(Network):
     __the_world = {}
     __capabilities = []
 

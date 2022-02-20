@@ -1,1 +1,1 @@
-from highcliff.infrastructure.infrastructure import Infrastructure, LocalInfrastructure
+from highcliff.infrastructure.network import Network, LocalNetwork
