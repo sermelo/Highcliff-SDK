@@ -48,37 +48,6 @@ class AI:
 
         return selected_goal
 
-    def __perceive(self):
-        goal = self.__select_goal(self.__goals)
-        world_state_snapshot = copy.copy(self.__get_world_state())
-        return goal, world_state_snapshot
-
-    def __reason(self, goal, world_state):
-        planner = RegressivePlanner(world_state, self.__capabilities_GLOBAL_VARIABLE)
-        try:
-            plan = planner.find_plan(goal)
-        except:
-            plan = None
-
-        return plan
-
-    def __act(self, plan):
-        # execute the first act in the plan. the act will affect the world and get us one step closer to the goal
-        # the plan will be updated and actions executed until the goal is reached
-        next_action = plan[0].action
-        next_action.act()
-
-        world_state_after = self.__get_world_state()
-        action_had_intended_effect = next_action.effects.items() <= world_state_after.items()
-
-        # the action is a success if the altered world matches the action's intended effect
-        if action_had_intended_effect:
-            action_status = ActionStatus.SUCCESS
-        else:
-            action_status = ActionStatus.FAIL
-
-        return action_status, world_state_after
-
     def __reflect(self, goal, world_state_before, plan, action_status, world_state_after):
         diary_entry = {
             "my_goal": goal,
@@ -90,15 +59,40 @@ class AI:
         self.__diary.append(diary_entry)
 
     def __run_ai(self):
-        # low-level brain function: perception
-        goal, world_state_before = self.__perceive()
+        # select a single goal from the list of goals
+        goal = self.__select_goal(self.__goals)
 
-        # middle-level brain function: reasoning and planning
-        plan = self.__reason(goal, world_state_before)
+        # create a plan to achieve the selected goal
+        planner = RegressivePlanner(self.__get_world_state(), self.__capabilities_GLOBAL_VARIABLE)
 
-        # high-level brain function: action and introspection
-        action_status, world_state_after = self.__act(plan)
-        self.__reflect(goal, world_state_before, plan, action_status, world_state_after)
+        # start by assuming that there is no plan, the action will have no effect and will fail
+        plan = None
+        effect_of_actions = {}
+        action_status = ActionStatus.FAIL
+
+        # take a snapshot of the current world state before taking action that may change it
+        world_state_snapshot = copy.copy(self.__get_world_state())
+
+        try:
+            # make a plan
+            plan = planner.find_plan(goal)
+            next_action = plan[0].action
+
+            # execute the first act in the plan. the act will affect the world and get us one step closer to the goal
+            # the plan will be updated and actions executed until the goal is reached
+            next_action.act()
+
+            # the action is a success if the altered world matches the action's intended effect
+            action_had_intended_effect = next_action.effects.items() <= self.__get_world_state().items()
+            if action_had_intended_effect:
+                action_status = ActionStatus.SUCCESS
+
+        except:
+            # no viable plan found. no action to be taken
+            pass
+
+        # record the results of this iteration
+        self.__reflect(goal, world_state_snapshot, plan, action_status, self.__get_world_state())
 
     def diary(self):
         return self.__diary

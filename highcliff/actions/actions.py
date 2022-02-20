@@ -39,7 +39,6 @@ class AIaction(Action):
         # every AI action runs custom behavior, updates the world, and returns a result
         self.behavior()
         self.update_the_world(self.effects)
-        return self.effects
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action

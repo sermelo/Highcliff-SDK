@@ -81,18 +81,15 @@ class TestHighcliffExamples(unittest.TestCase):
         self.assertTrue(len(self.capabilities_GLOBAL_VARIABLE) == 1)
         self.assertEqual(test_action, self.capabilities_GLOBAL_VARIABLE[0])
 
-    def test_action_notifies_failure(self):
+    def test_action_notifies_success(self):
         # an action that does not have the intended effect should record a failure
 
-        # define a test action with a behavior failure
-        class TestFailedAction(MonitorBodyTemperature):
-            def action_failure(self):
-                self.effects['is_body_temperature_monitored'] = False
-
+        # define a test action with a successful behavior
+        class TestSucceededAction(MonitorBodyTemperature):
             def behavior(self):
-                self.action_failure()
+                pass
 
-        TestFailedAction(self.the_world_GLOBAL_VARIABLE, self.capabilities_GLOBAL_VARIABLE)
+        TestSucceededAction(self.the_world_GLOBAL_VARIABLE, self.capabilities_GLOBAL_VARIABLE)
 
         # define the test world state and goals
         self.the_world_GLOBAL_VARIABLE = {"is_body_temperature_monitored": False}
@@ -105,9 +102,10 @@ class TestHighcliffExamples(unittest.TestCase):
                        goals, ai_life_span_in_iterations)
 
         # the action should complete unsuccessfully
-        self.assertEqual(ActionStatus.FAIL, highcliff.diary()[0]['action_status'])
+        pprint(highcliff.diary())
+        self.assertEqual(ActionStatus.SUCCESS, highcliff.diary()[0]['action_status'])
 
-    def test_action_notifies_failure2(self):
+    def test_action_notifies_failure(self):
         # an action that does not have the intended effect should record a failure
 
         # define a test action with a behavior failure
@@ -171,11 +169,9 @@ class TestHighcliffExamples(unittest.TestCase):
         # TODO: the world state before should match the original known world
 
         # the world should have been changed to match the goal state
-        #self.assertEqual(goals, highcliff.diary()[0]['the_world_state_after'])
+        self.assertEqual(goals, highcliff.diary()[0]['the_world_state_after'])
 
         # TODO: the world state after should match the goal state
-
-        pprint(highcliff.diary())
 
 
 if __name__ == '__main__':
