@@ -16,8 +16,11 @@ class MonitorBodyTemperature(AIaction):
 
 
 class ChangeRoomTemperature(AIaction):
-    effects = {"is_room_temperature_comfortable": True}
-    preconditions = {"is_room_temperature_change_authorized": True}
+
+    def __init__(self, infrastructure):
+        super().__init__(infrastructure)
+        self.effects = {"is_room_temperature_comfortable": True}
+        self.preconditions = {"is_room_temperature_change_authorized": True}
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action
@@ -25,12 +28,17 @@ class ChangeRoomTemperature(AIaction):
 
 
 class AuthorizeRoomTemperatureChange(AIaction):
-    effects = {"is_room_temperature_change_authorized": True}
-    preconditions = {"is_room_temperature_comfortable": False}
+
+    def __init__(self, infrastructure):
+        super().__init__(infrastructure)
+        self.effects = {"is_room_temperature_change_authorized": True}
+        self.preconditions = {"is_room_temperature_comfortable": False}
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action
         raise NotImplementedError
+
+# TODO: Remove these classes
 
 
 class AlertCareProvider(AIaction):

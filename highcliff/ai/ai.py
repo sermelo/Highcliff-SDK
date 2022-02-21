@@ -81,6 +81,7 @@ class AI:
         # start by assuming that there is no plan, the action will have no effect and will fail
         plan = None
         action_status = ActionStatus.FAIL
+        actual_effect = {}
 
         # take a snapshot of the current world state before taking action that may change it
         world_state_snapshot = copy.copy(self.__get_world_state())
@@ -96,7 +97,7 @@ class AI:
             next_action.act()
 
             # the action is a success if the altered world matches the action's intended effect
-            actual_effect = self.__get_world_state()
+            actual_effect = copy.copy(self.__get_world_state())
             action_had_intended_effect = self.__is_subset_dictionary(intended_effect, actual_effect)
             if action_had_intended_effect:
                 action_status = ActionStatus.SUCCESS
@@ -106,7 +107,7 @@ class AI:
             pass
 
         # record the results of this iteration
-        self.__reflect(goal, world_state_snapshot, plan, action_status, self.__get_world_state())
+        self.__reflect(goal, world_state_snapshot, plan, action_status, actual_effect)
 
     def diary(self):
         return self.__diary
