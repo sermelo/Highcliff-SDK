@@ -6,6 +6,7 @@ from network import LocalNetwork
 
 class TestInfrastructure(unittest.TestCase):
     def test_local_infrastructure_reset(self):
+        # TODO: update this to include checking basic pub/sub mechanisms
 
         local_network = LocalNetwork.instance()
 
@@ -33,6 +34,7 @@ class TestInfrastructure(unittest.TestCase):
         self.assertEqual(reset_capabilities, local_network.capabilities())
 
     def test_local_infrastructure(self):
+        # TODO: update this to include checking basic pub/sub mechanisms
 
         # create two instances of local networks
         first_local_network = LocalNetwork.instance()

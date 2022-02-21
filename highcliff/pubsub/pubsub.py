@@ -1,3 +1,4 @@
+# TODO: remove the pub/sub module
 from jsonschema import validate, ValidationError
 import json
 

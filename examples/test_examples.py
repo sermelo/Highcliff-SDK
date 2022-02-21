@@ -239,7 +239,9 @@ class TestHighcliffExamples(unittest.TestCase):
         self.assertTrue(highcliff_reached_its_goal)
 
     # TODO: test pub sub functionality
-    
+    def test_publish_subscribe(self):
+        self.assertTrue(False)
+        
 
 if __name__ == '__main__':
     unittest.main()
