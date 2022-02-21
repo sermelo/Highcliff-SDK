@@ -126,7 +126,6 @@ class TestHighcliffExamples(unittest.TestCase):
 
         # define a test action with a behavior failure
         class TestFailedAction(MonitorBodyTemperature):
-            effects = {}
 
             def action_failure(self):
                 self.effects['is_body_temperature_monitored'] = False
@@ -144,9 +143,53 @@ class TestHighcliffExamples(unittest.TestCase):
         # run a local version of Highcliff
         ai_life_span_in_iterations = 1
         highcliff = AI(self.network, goals, ai_life_span_in_iterations)
-    #
-    #     # the action should complete unsuccessfully
-    #     self.assertEqual(ActionStatus.FAIL, highcliff.diary()[0]['action_status'])
+
+        pprint(highcliff.diary())
+
+        # the action should complete unsuccessfully
+        self.assertEqual(ActionStatus.FAIL, highcliff.diary()[0]['action_status'])
+
+    def test_running_a_one_step_plan(self):
+        # test that the ai can create a one-step plan to execute a single action with a single goal
+
+        # define a test body temperature monitor with a blank custom behavior
+        class TestBodyTemperatureMonitor(MonitorBodyTemperature):
+            def behavior(self):
+                pass
+
+        # instantiate the test body temperature monitor
+        test_body_temperature_monitor = TestBodyTemperatureMonitor(self.the_world_GLOBAL_VARIABLE,
+                                                                   self.capabilities_GLOBAL_VARIABLE)
+
+        # define the test world state and goals
+        self.the_world_GLOBAL_VARIABLE = {"is_body_temperature_monitored": False}
+        goals = {"is_body_temperature_monitored": True}
+
+        # run a local version of Highcliff
+        ai_life_span_in_iterations = 1
+        highcliff = AI(self.the_world_GLOBAL_VARIABLE,
+                       self.capabilities_GLOBAL_VARIABLE,
+                       goals, ai_life_span_in_iterations)
+
+        # the action should complete successfully
+        self.assertEqual(ActionStatus.SUCCESS, highcliff.diary()[0]['action_status'])
+
+        # the goal should have been to monitor body temperature
+        self.assertEqual(goals, highcliff.diary()[0]['my_goal'])
+
+        # the ai should have devised a one-step plan
+        expected_plan_steps = 1
+        self.assertEqual(expected_plan_steps, len(highcliff.diary()[0]['my_plan']))
+
+        # the plan should have been to monitor body temperature
+        self.assertEqual(test_body_temperature_monitor, highcliff.diary()[0]['my_plan'][0].action)
+
+        # TODO: the world state before should match the original known world
+
+        # the world should have been changed to match the goal state
+        self.assertEqual(goals, highcliff.diary()[0]['the_world_state_after'])
+
+        # TODO: the world state after should match the goal state
 
 
 if __name__ == '__main__':
