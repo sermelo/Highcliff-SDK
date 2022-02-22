@@ -43,7 +43,6 @@ class TestInfrastructure(unittest.TestCase):
         self.assertEqual(reset_capabilities, local_network.topics())
 
     def test_local_infrastructure(self):
-        # TODO: update this to include checking basic pub/sub mechanisms
 
         # create two instances of local networks
         first_local_network = LocalNetwork.instance()
@@ -73,6 +72,18 @@ class TestInfrastructure(unittest.TestCase):
         first_local_network.add_capability(action)
         self.assertEqual(action, first_local_network.capabilities()[0])
         self.assertEqual(action, second_local_network.capabilities()[0])
+
+        # the topics in both networks should initially be empty
+        expected_topics = []
+        self.assertEqual(expected_topics, first_local_network.topics())
+        self.assertEqual(expected_topics, second_local_network.topics())
+
+        # update the topics in the first network and check for the same update in the second network
+        topic = "dummy_topic"
+        topic_list = [topic]
+        first_local_network.create_topic(topic)
+        self.assertEqual(topic_list, first_local_network.topics())
+        self.assertEqual(topic_list, second_local_network.topics())
 
 
 if __name__ == '__main__':
