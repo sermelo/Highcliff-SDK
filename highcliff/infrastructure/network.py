@@ -66,6 +66,9 @@ class LocalNetwork(Network):
     def create_topic(self, topic):
         self.__message_queue[topic] = []
 
+    def topics(self):
+        return list(self.__message_queue.keys())
+
     def publish(self, topic, message):
         # raise an error to the caller if the topic is invalid
         try:

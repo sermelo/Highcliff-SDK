@@ -6,7 +6,6 @@ from network import LocalNetwork
 
 class TestInfrastructure(unittest.TestCase):
     def test_local_infrastructure_reset(self):
-        # TODO: update this to include checking basic pub/sub mechanisms
 
         local_network = LocalNetwork.instance()
 
@@ -22,6 +21,12 @@ class TestInfrastructure(unittest.TestCase):
         capabilities_are_not_empty = len(local_network.capabilities()) > 0
         self.assertTrue(capabilities_are_not_empty)
 
+        # add a topic and check that the topics are not empty
+        dummy_topic = "dummy_topic"
+        local_network.create_topic(dummy_topic)
+        topics_are_not_empty = len(local_network.topics()) > 0
+        self.assertTrue(topics_are_not_empty)
+
         # reset the network infrastructure
         local_network.reset()
 
@@ -32,6 +37,10 @@ class TestInfrastructure(unittest.TestCase):
         # check that the capabilities have been reset
         reset_capabilities = []
         self.assertEqual(reset_capabilities, local_network.capabilities())
+
+        # check that the topics have been reset
+        reset_topics = []
+        self.assertEqual(reset_capabilities, local_network.topics())
 
     def test_local_infrastructure(self):
         # TODO: update this to include checking basic pub/sub mechanisms

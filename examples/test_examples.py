@@ -242,7 +242,6 @@ class TestHighcliffExamples(unittest.TestCase):
         highcliff_reached_its_goal = self.__is_subset_dictionary(goals, highcliff.diary()[1]['the_world_state_after'])
         self.assertTrue(highcliff_reached_its_goal)
 
-    # TODO: test pub sub functionality
     def test_publish_subscribe(self):
         # create a topic
         test_topic = "test_topic"
