@@ -2,7 +2,7 @@ import copy
 import unittest
 
 # needed to connect to the central infrastructure
-from highcliff.infrastructure import LocalNetwork
+from highcliff.infrastructure import LocalNetwork, InvalidTopic
 
 # needed to run a local version of the AI
 from highcliff.ai import AI
@@ -11,6 +11,10 @@ from highcliff.actions import ActionStatus
 
 # the Highcliff actions to be tested
 from highcliff.exampleactions import MonitorBodyTemperature, AuthorizeRoomTemperatureChange
+
+# global variables needed to test publish and subscribe
+global published_topic
+global published_message
 
 
 class TestHighcliffExamples(unittest.TestCase):
@@ -240,8 +244,40 @@ class TestHighcliffExamples(unittest.TestCase):
 
     # TODO: test pub sub functionality
     def test_publish_subscribe(self):
-        self.assertTrue(False)
-        
+        # create a topic
+        test_topic = "test_topic"
+        self.network.create_topic(test_topic)
+
+        # create a callback function to test publishing
+        def test_callback(topic, message):
+            global published_message
+            global published_topic
+
+            published_topic = topic
+            published_message = message
+
+        # subscribe to the test topic
+        self.network.subscribe(test_topic, test_callback)
+
+        # publish a message to the subscribed topic
+        test_message = {"payload": "test_payload", "effects": {"first_effect": True, "second_effect": True}}
+        self.network.publish(test_topic, test_message)
+
+        # subscribers should be notified when there is a new message posted to a topic of interest
+        global published_message
+        global published_topic
+        self.assertEqual(test_topic, published_topic)
+        self.assertEqual(test_message, published_message)
+
+        # an invalid message should raise an error
+
+        # an invalid topic should raise an error
+        invalid_topic = "invalid_topic"
+        try:
+            self.assertRaises(InvalidTopic, self.network.publish, invalid_topic, test_message)
+        except InvalidTopic:
+            pass
+
 
 if __name__ == '__main__':
     unittest.main()

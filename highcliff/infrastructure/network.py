@@ -13,6 +13,10 @@ class InvalidMessageFormat(Exception):
     pass
 
 
+class InvalidTopic(Exception):
+    pass
+
+
 class Network:
     def __init__(self):
         pass
@@ -63,6 +67,12 @@ class LocalNetwork(Network):
         self.__message_queue[topic] = []
 
     def publish(self, topic, message):
+        # raise an error to the caller if the topic is invalid
+        try:
+            self.__validate_topic(topic)
+        except InvalidTopic:
+            raise InvalidTopic
+
         self.__validate_message(message)
 
         # add the effects associated with the message to the world
@@ -81,6 +91,11 @@ class LocalNetwork(Network):
         self.__the_world = {}
         self.__capabilities = []
         self.__message_queue = {}
+
+    def __validate_topic(self, topic):
+        # validate the the topic exists in the communication infrastructure
+        if topic not in self.__message_queue.keys():
+            raise InvalidTopic
 
     def __validate_message(self, json_message):
         # validate the schema against the message and raise an error if invalid
