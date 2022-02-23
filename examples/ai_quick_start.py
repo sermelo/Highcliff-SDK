@@ -1,0 +1,1 @@
+# create an example of standing up the ai in some infrastructure

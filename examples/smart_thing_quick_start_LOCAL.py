@@ -25,6 +25,7 @@ class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
 # launch functionality by instantiating the action
 SimulatedUserInterface(network)
 
+# start the world with the necessary state
 world_update = {"is_room_temperature_comfortable": False, "is_room_temperature_change_authorized": False}
 network.update_the_world(world_update)
 

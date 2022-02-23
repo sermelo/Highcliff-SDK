@@ -39,6 +39,9 @@ class Network:
     def publish(self, topic, message):
         raise NotImplementedError
 
+    def subscribe(self, topic, callback_function):
+        raise NotImplementedError
+
 
 @Singleton
 class LocalNetwork(Network):

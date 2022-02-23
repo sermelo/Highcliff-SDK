@@ -6,8 +6,9 @@ from highcliff.actions.actions import ActionStatus
 # AI, GOAP
 from goap.planner import RegressivePlanner
 
-# Needed to define a central infrastructure simulation
-from highcliff.infrastructure.singleton import Singleton
+
+class InvalidGoal(Exception):
+    pass
 
 
 class AI:
@@ -18,11 +19,25 @@ class AI:
         # central infrastructure used to coordinate and communicate
         self.__infrastructure = infrastructure
 
+        # validate the goals before accepting them
+        try:
+            self.__validate_goals(goals, infrastructure.the_world())
+        except InvalidGoal:
+            # force the caller to deal with the invalid goal
+            raise InvalidGoal
+
         self.__goals = goals
         self.__diary = []
 
         for iteration in range(life_span_in_iterations):
             self.__run_ai()
+
+    @staticmethod
+    def __validate_goals(goals, world):
+        # the goals given should be achievable in the known world
+        for goal in goals:
+            if goal not in world:
+                raise InvalidGoal
 
     def __get_world_state(self):
         # this function returns the current state of the world
