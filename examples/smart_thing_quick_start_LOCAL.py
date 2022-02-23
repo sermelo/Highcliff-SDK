@@ -1,17 +1,17 @@
 # needed to run a local version Highcliff
 from highcliff.ai import AI
 
+# needed to run and access the infrastructure needed to communicate and coordinate
+from highcliff.infrastructure import LocalNetwork
+
 # the Highcliff action you wish to implement
 from highcliff.exampleactions import AuthorizeRoomTemperatureChange
 
 # needed to pretty-print the AI's execution logs
 from pprint import pprint
 
-# define the state of the world and the ai capabilities.
-# when running a local version of Highcliff, use global variables to simulate underlying infrastructure
-# these global variables will be replaced with urls in the production version
-the_world_GLOBAL_VARIABLE = {"is_room_temperature_change_authorized": False, "is_room_temperature_comfortable": False}
-capabilities_GLOBAL_VARIABLE = []
+# define the infrastructure that provides the message queue functionality
+network = LocalNetwork.instance()
 
 
 # build functionality by writing custom behavior for your selected actions
@@ -23,13 +23,15 @@ class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
 
 
 # launch functionality by instantiating the action
-SimulatedUserInterface(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
+SimulatedUserInterface(network)
 
+world_update = {"is_room_temperature_comfortable": False, "is_room_temperature_change_authorized": False}
+network.update_the_world(world_update)
 
 # run a local version of Highcliff
 ai_life_span_in_iterations = 1
 goals = {"is_room_temperature_change_authorized": True}
-highcliff = AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+highcliff = AI(network, goals, ai_life_span_in_iterations)
 
 # check the execution logs
 print()

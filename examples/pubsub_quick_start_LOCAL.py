@@ -1,5 +1,5 @@
 # needed to run and access the infrastructure needed to communicate and coordinate
-from highcliff.infrastructure import LocalNetwork, InvalidTopic
+from highcliff.infrastructure import LocalNetwork
 
 # define the infrastructure that provides the message queue functionality
 network = LocalNetwork.instance()
