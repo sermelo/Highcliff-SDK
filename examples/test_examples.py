@@ -10,7 +10,7 @@ from highcliff.ai import AI
 from highcliff.actions import ActionStatus
 
 # the Highcliff actions to be tested
-from highcliff.exampleactions import MonitorBodyTemperature, AuthorizeRoomTemperatureChange
+from highcliff.exampleactions import MonitorBodyTemperature, AuthorizeRoomTemperatureChange, ChangeRoomTemperature
 
 # global variables needed to test publish and subscribe
 global published_topic
@@ -232,6 +232,51 @@ class TestHighcliffExamples(unittest.TestCase):
 
         # run a local version of Highcliff
         ai_life_span_in_iterations = 2
+        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+
+        # the plan should have started with two steps, then progress to a single step
+        self.assertEqual(2, len(highcliff.diary()[0]['my_plan']))
+        self.assertEqual(1, len(highcliff.diary()[1]['my_plan']))
+
+        # in the second iteration, the ai should have reached it's goal
+        highcliff_reached_its_goal = self.__is_subset_dictionary(goals, highcliff.diary()[1]['the_world_state_after'])
+        self.assertTrue(highcliff_reached_its_goal)
+
+    def test_a_three_step_plan(self):
+        # test that the ai can create a two-step plan to execute multiple actions to reach a goal
+
+        # define a test body temperature monitor with a blank custom behavior
+        class TestBodyTemperatureMonitor(MonitorBodyTemperature):
+            def behavior(self):
+                pass
+
+        # instantiate the test body temperature monitor
+        TestBodyTemperatureMonitor(self.network)
+
+        # define a test body authorization application with a blank custom behavior
+        class TestAuthorizationApp(AuthorizeRoomTemperatureChange):
+            def behavior(self):
+                pass
+
+        # instantiate the test authorization app
+        TestAuthorizationApp(self.network)
+
+        # define a test change room temperature action with a blank custom behavior
+        class TestChangeRoomTemperature(ChangeRoomTemperature):
+            def behavior(self):
+                pass
+
+        # instantiate the test room temperature change behavior
+        TestChangeRoomTemperature(self.network)
+
+        # define the test world state and goals
+        world_update = {"is_body_temperature_monitored": False, "is_room_temperature_change_authorized": False}
+        self.network.update_the_world(world_update)
+        world_state_before_running_the_ai = copy.copy(self.network.the_world())
+        goals = {"is_room_temperature_change_authorized": True}
+
+        # run a local version of Highcliff
+        ai_life_span_in_iterations = 3
         highcliff = AI(self.network, goals, ai_life_span_in_iterations)
 
         # the plan should have started with two steps, then progress to a single step

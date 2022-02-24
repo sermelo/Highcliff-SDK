@@ -43,7 +43,7 @@ class AcmeTemperatureMonitor(MonitorBodyTemperature):
 AcmeTemperatureMonitor(network)
 
 # start the world with the necessary state
-world_update = {"is_body_temperature_monitored": False}
+world_update = {"is_room_temperature_comfortable": False, "is_body_temperature_monitored": False}
 network.update_the_world(world_update)
 
 # run a local version of Highcliff

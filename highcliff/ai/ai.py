@@ -5,6 +5,7 @@ from highcliff.actions.actions import ActionStatus
 
 # AI, GOAP
 from goap.planner import RegressivePlanner
+from goap.algo.astar import PathNotFoundException
 
 
 class InvalidGoal(Exception):
@@ -104,12 +105,18 @@ class AI:
         try:
             # make a plan
             plan = planner.find_plan(goal)
-            next_action = plan[0].action
 
-            # execute the first act in the plan. the act will affect the world and get us one step closer to the goal
-            # the plan will be updated and actions executed until the goal is reached
-            intended_effect = copy.copy(next_action.effects)
-            next_action.act()
+            try:
+                next_action = plan[0].action
+
+                # execute the first act in the plan. it will affect the world and get us one step closer to the goal
+                # the plan will be updated and actions executed until the goal is reached
+                intended_effect = copy.copy(next_action.effects)
+                next_action.act()
+
+            except IndexError:
+                # if there is no viable plan, then record no intended effect
+                intended_effect = {}
 
             # the action is a success if the altered world matches the action's intended effect
             actual_effect = copy.copy(self.__get_world_state())
@@ -117,7 +124,7 @@ class AI:
             if action_had_intended_effect:
                 action_status = ActionStatus.SUCCESS
 
-        except:
+        except PathNotFoundException:
             # no viable plan found. no action to be taken
             pass
 
