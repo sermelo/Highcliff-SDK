@@ -28,16 +28,14 @@ class TestAI(unittest.TestCase):
         TestAction(self.network)
 
         # define the test world state and goals
-        world_update = {}
-        self.network.update_the_world(world_update)
-        goals = {"goal_not_in_the_test_action": True}
+        self.network.update_the_world({})
+        self.highcliff.set_goals({"goal_not_in_the_test_action": True})
 
         # run a local version of Highcliff
-        ai_life_span_in_iterations = 1
-        highcliff = AI.instance()
+        self.highcliff.run(life_span_in_iterations=1)
 
         # there should be no plan
-        self.assertEqual(None, highcliff.diary()[0]['my_plan'])
+        self.assertEqual(None, self.highcliff.diary()[0]['my_plan'])
 
     def test_goal_not_already_in_the_world(self):
         # if the ai encounters a goal not already in the world (in some state).
