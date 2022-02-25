@@ -1,1 +1,1 @@
-from highcliff.ai.ai import AI, InvalidGoal
+from highcliff.ai.ai import AI

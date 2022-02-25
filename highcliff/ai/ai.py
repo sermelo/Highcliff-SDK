@@ -8,10 +8,6 @@ from goap.planner import RegressivePlanner
 from goap.algo.astar import PathNotFoundException
 
 
-class InvalidGoal(Exception):
-    pass
-
-
 class AI:
     __infrastructure = None
     __goals = None
@@ -20,25 +16,11 @@ class AI:
         # central infrastructure used to coordinate and communicate
         self.__infrastructure = infrastructure
 
-        # validate the goals before accepting them
-        try:
-            self.__validate_goals(goals, infrastructure.the_world())
-        except InvalidGoal:
-            # force the caller to deal with the invalid goal
-            raise InvalidGoal
-
         self.__goals = goals
         self.__diary = []
 
         for iteration in range(life_span_in_iterations):
             self.__run_ai()
-
-    @staticmethod
-    def __validate_goals(goals, world):
-        # the goals given should be achievable in the known world
-        for goal in goals:
-            if goal not in world:
-                raise InvalidGoal
 
     def __get_world_state(self):
         # this function returns the current state of the world
@@ -49,15 +31,25 @@ class AI:
         return self.__infrastructure.capabilities()
 
     def __select_goal(self, prioritized_goals):
+        # work on the next highest-priority goal that has not yet been met
+
         # the default is to select an empty goal
         selected_goal = {}
 
         # go through goals in priority order
         for goal in self.__goals:
-            # find a goal that is not realized in the world
-            the_goal_is_not_met = self.__goals[goal] != self.__get_world_state()[goal]
-            if the_goal_is_not_met:
-                # select the first (highest priority) unrealized goal
+            # if the condition is not in the world, add it to the world, assume it's false, pursue the goal
+            if goal not in self.__get_world_state():
+                self.__infrastructure.update_the_world({goal: False})
+                selected_goal = {goal: self.__goals[goal]}
+                break
+
+            # if the goal is already met (matches the condition of the world) then skip it
+            if self.__goals[goal] == self.__get_world_state()[goal]:
+                pass
+
+            # if the goal is not met (mismatches the condition of the world) pursue it
+            if self.__goals[goal] != self.__get_world_state()[goal]:
                 selected_goal = {goal: self.__goals[goal]}
                 break
 

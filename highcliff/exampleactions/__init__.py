@@ -1,2 +1,2 @@
 from highcliff.exampleactions.exampleactions import MonitorBodyTemperature, ChangeRoomTemperature, \
-    AuthorizeRoomTemperatureChange
+    AuthorizeRoomTemperatureChange, A, B, C
