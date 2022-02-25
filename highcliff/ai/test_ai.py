@@ -8,12 +8,13 @@ from highcliff.ai import AI
 
 class TestAI(unittest.TestCase):
     def setUp(self):
-        # define the infrastructure used to coordinate and communicate
-        self.network = LocalNetwork.instance()
+        # get a reference to the ai and its network
+        self.highcliff = AI.instance()
+        self.network = self.highcliff.network()
 
     def tearDown(self):
-        # reset the infrastructure
-        self.network.reset()
+        # reset the ai
+        self.highcliff.reset()
 
     def test_goal_not_in_any_actions(self):
         # if the ai has no registered actions to achieve a goal, it should end with no plan
@@ -50,52 +51,43 @@ class TestAI(unittest.TestCase):
         # instantiate the test body temperature monitor
         TestBodyTemperatureMonitor(self.network)
 
-        # define the test world state and goals
-        world_update = {}
-        self.network.update_the_world(world_update)
-        goals = {"is_room_temperature_change_needed": True}
+        # define the network's world state and the AI's goals
+        self.network.update_the_world({})
+        self.highcliff.set_goals({"is_room_temperature_change_needed": True})
 
-        # run a local version of Highcliff
-        ai_life_span_in_iterations = 1
-        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+        # run the ai
+        self.highcliff.run(life_span_in_iterations=1)
 
         # before starting the first action, the ai should have notified the world that the goal was unmet
         unmet_goal = {"is_room_temperature_change_needed": False}
-        self.assertEqual(unmet_goal, highcliff.diary()[0]['the_world_state_before'])
+        self.assertEqual(unmet_goal, self.highcliff.diary()[0]['the_world_state_before'])
 
     def test_aimless_iterations(self):
         # the ai should be able to handle iterations with no goals
 
-        # define a test body temperature monitor with a blank custom behavior
+        # define an action (with a blank custom behavior)
         class TestAction(MonitorBodyTemperature):
             def behavior(self):
                 pass
 
-        # instantiate the highcliff AI and get a reference to its infrastructure
-        highcliff = AI.instance()
-        network = highcliff.network()
+        # instantiate the action
+        TestAction(self.network)
 
-        # instantiate the test body temperature monitor
-        TestAction(network)
-
-        # define the test world state and goals
-        world_update = {}
-        network.update_the_world(world_update)
-        goals = {"is_room_temperature_change_needed": True}
-        highcliff.set_goals(goals)
+        # define the network's world state and the AI's goals
+        self.network.update_the_world({})
+        self.highcliff.set_goals({"is_room_temperature_change_needed": True})
 
         # run the ai
-        life_span_in_iterations = 3
-        highcliff.run(life_span_in_iterations)
+        self.highcliff.run(life_span_in_iterations=3)
 
         # it only takes 1 iteration for the ai to solve the problem
         # the remaining iterations should have no goal or plan
         no_goal = {}
-        self.assertEqual(no_goal, highcliff.diary()[1]['my_goal'])
-        self.assertEqual(no_goal, highcliff.diary()[2]['my_goal'])
+        self.assertEqual(no_goal, self.highcliff.diary()[1]['my_goal'])
+        self.assertEqual(no_goal, self.highcliff.diary()[2]['my_goal'])
         no_plan = []
-        self.assertEqual(no_plan, highcliff.diary()[1]['my_plan'])
-        self.assertEqual(no_plan, highcliff.diary()[2]['my_plan'])
+        self.assertEqual(no_plan, self.highcliff.diary()[1]['my_plan'])
+        self.assertEqual(no_plan, self.highcliff.diary()[2]['my_plan'])
 
 
 if __name__ == '__main__':
