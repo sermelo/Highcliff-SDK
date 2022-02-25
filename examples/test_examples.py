@@ -196,10 +196,6 @@ class TestHighcliffExamples(unittest.TestCase):
         # the plan should have been to monitor body temperature
         self.assertEqual(test_body_temperature_monitor, highcliff.diary()[0]['my_plan'][0].action)
 
-        # before starting the first action, the ai should have notified the world that the goal was unmet
-        unmet_goal = {"is_room_temperature_change_needed": False}
-        self.assertEqual(unmet_goal, highcliff.diary()[0]['the_world_state_before'])
-
         # the diary should have recorded that the world changed to reflect the goal state
         world_state_after_matches_goals = self.__is_subset_dictionary(goals,
                                                                       highcliff.diary()[0]['the_world_state_after'])

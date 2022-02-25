@@ -11,6 +11,10 @@ class TestAI(unittest.TestCase):
         # define the infrastructure used to coordinate and communicate
         self.network = LocalNetwork.instance()
 
+    def tearDown(self):
+        # reset the infrastructure
+        self.network.reset()
+
     def test_goal_not_in_any_actions(self):
         # if the ai has no registered actions to achieve a goal, it should end with no plan
 
@@ -34,8 +38,30 @@ class TestAI(unittest.TestCase):
         # there should be no plan
         self.assertEqual(None, highcliff.diary()[0]['my_plan'])
 
-    def test_goal_not_in_the_world(self):
-        pass
+    def test_goal_not_already_in_the_world(self):
+        # if the ai encounters a goal not already in the world (in some state).
+        # it should record that goal as unmet in the world
+
+        # define a test body temperature monitor with a blank custom behavior
+        class TestBodyTemperatureMonitor(MonitorBodyTemperature):
+            def behavior(self):
+                pass
+
+        # instantiate the test body temperature monitor
+        TestBodyTemperatureMonitor(self.network)
+
+        # define the test world state and goals
+        world_update = {}
+        self.network.update_the_world(world_update)
+        goals = {"is_room_temperature_change_needed": True}
+
+        # run a local version of Highcliff
+        ai_life_span_in_iterations = 1
+        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+
+        # before starting the first action, the ai should have notified the world that the goal was unmet
+        unmet_goal = {"is_room_temperature_change_needed": False}
+        self.assertEqual(unmet_goal, highcliff.diary()[0]['the_world_state_before'])
 
     def test_aimless_iterations(self):
         # the ai should be able to handle iterations with no goals
@@ -56,7 +82,7 @@ class TestAI(unittest.TestCase):
         ai_life_span_in_iterations = 3
         highcliff = AI(self.network, goals, ai_life_span_in_iterations)
 
-        # it only takes 1 iteration for the ai to solve the problem.
+        # it only takes 1 iteration for the ai to solve the problem
         # the remaining iterations should have no goal or plan
         no_goal = {}
         self.assertEqual(no_goal, highcliff.diary()[1]['my_goal'])
