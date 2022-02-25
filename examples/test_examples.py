@@ -10,7 +10,7 @@ from highcliff.ai import AI
 from highcliff.actions import ActionStatus
 
 # the Highcliff actions to be tested
-from highcliff.exampleactions import MonitorBodyTemperature, AuthorizeRoomTemperatureChange, ChangeRoomTemperature, A, B, C
+from highcliff.exampleactions import MonitorBodyTemperature, AuthorizeRoomTemperatureChange, ChangeRoomTemperature
 
 # global variables needed to test publish and subscribe
 global published_topic
@@ -51,11 +51,11 @@ class TestHighcliffExamples(unittest.TestCase):
         test_action = TestAction(self.network)
 
         # check the effects of the test action
-        expected_effects = {"is_body_temperature_monitored": True, "is_room_temperature_comfortable": False}
+        expected_effects = {"is_room_temperature_change_needed": True}
         self.assertEqual(expected_effects, test_action.effects)
 
         # check the preconditions of the test action
-        expected_preconditions = {"is_body_temperature_monitored": False}
+        expected_preconditions = {}
         self.assertEqual(expected_preconditions, test_action.preconditions)
 
     def test_action_updates_the_world(self):
@@ -112,9 +112,9 @@ class TestHighcliffExamples(unittest.TestCase):
         TestSucceededAction(self.network)
 
         # define the test world state and goals
-        world_update = {"is_body_temperature_monitored": False}
+        world_update = {}
         self.network.update_the_world(world_update)
-        goals = {"is_body_temperature_monitored": True}
+        goals = {"is_room_temperature_change_needed": True}
 
         # run a local version of Highcliff
         ai_life_span_in_iterations = 1
@@ -175,10 +175,9 @@ class TestHighcliffExamples(unittest.TestCase):
         test_body_temperature_monitor = TestBodyTemperatureMonitor(self.network)
 
         # define the test world state and goals
-        world_update = {"is_body_temperature_monitored": False}
+        world_update = {}
         self.network.update_the_world(world_update)
-        world_state_before_running_the_ai = copy.copy(self.network.the_world())
-        goals = {"is_body_temperature_monitored": True}
+        goals = {"is_room_temperature_change_needed": True}
 
         # run a local version of Highcliff
         ai_life_span_in_iterations = 1
@@ -197,8 +196,9 @@ class TestHighcliffExamples(unittest.TestCase):
         # the plan should have been to monitor body temperature
         self.assertEqual(test_body_temperature_monitor, highcliff.diary()[0]['my_plan'][0].action)
 
-        # the diary should have recorded that the world state before matched the original known world
-        self.assertEqual(world_state_before_running_the_ai, highcliff.diary()[0]['the_world_state_before'])
+        # before starting the first action, the ai should have notified the world that the goal was unmet
+        unmet_goal = {"is_room_temperature_change_needed": False}
+        self.assertEqual(unmet_goal, highcliff.diary()[0]['the_world_state_before'])
 
         # the diary should have recorded that the world changed to reflect the goal state
         world_state_after_matches_goals = self.__is_subset_dictionary(goals,
@@ -244,23 +244,23 @@ class TestHighcliffExamples(unittest.TestCase):
     def test_a_three_step_plan(self):
         # test that the ai can create a two-step plan to execute multiple actions to reach a goal
 
-        class testA(A):
+        class TestBodyTemperatureMonitor(MonitorBodyTemperature):
             def behavior(self):
                 pass
 
-        testA(self.network)
+        TestBodyTemperatureMonitor(self.network)
 
-        class testB(B):
+        class TestAuthorizeRoomTemperatureChange(AuthorizeRoomTemperatureChange):
             def behavior(self):
                 pass
 
-        testB(self.network)
+        TestAuthorizeRoomTemperatureChange(self.network)
 
-        class testC(C):
+        class TestChangeRoomTemperature(ChangeRoomTemperature):
             def behavior(self):
                 pass
 
-        testC(self.network)
+        TestChangeRoomTemperature(self.network)
 
         # define the test world state and goals
         world_update = {}
@@ -270,9 +270,6 @@ class TestHighcliffExamples(unittest.TestCase):
         # run a local version of Highcliff
         ai_life_span_in_iterations = 3
         highcliff = AI(self.network, goals, ai_life_span_in_iterations)
-
-        import pprint
-        pprint.pprint(highcliff.diary())
 
         # the plan should have started with two steps, then progress to a single step
         self.assertEqual(3, len(highcliff.diary()[0]['my_plan']))

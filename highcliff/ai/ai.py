@@ -120,6 +120,10 @@ class AI:
             # no viable plan found. no action to be taken
             pass
 
+        except KeyError:
+            # there are no registered actions that can satisfy the specified goal. no action to be taken
+            pass
+
         # record the results of this iteration
         self.__reflect(goal, world_state_snapshot, plan, action_status, actual_effect)
 
