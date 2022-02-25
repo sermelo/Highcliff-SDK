@@ -2,7 +2,7 @@ import copy
 import unittest
 
 # needed to connect to the central infrastructure
-from highcliff.infrastructure import LocalNetwork, InvalidTopic
+from highcliff.infrastructure import LocalNetwork, InvalidTopic, InvalidMessageFormat
 
 # needed to run a local version of the AI
 from highcliff.ai import AI
@@ -293,7 +293,18 @@ class TestHighcliffExamples(unittest.TestCase):
         self.network.subscribe(test_topic, test_callback)
 
         # publish a message to the subscribed topic
-        test_message = {"payload": "test_payload", "effects": {"first_effect": True, "second_effect": True}}
+        test_message = {
+            "event_type": "publish_message",
+            "event_tags": [],
+            "timestamp": 1234567.89,
+            "device_info": {},
+            "application_info": {},
+            "user_info": {},
+            "environment": "test",
+            "context": {},
+            "effects": {},
+            "data": {}
+        }
         self.network.publish(test_topic, test_message)
 
         # subscribers should be notified when there is a new message posted to a topic of interest
@@ -303,7 +314,12 @@ class TestHighcliffExamples(unittest.TestCase):
         self.assertEqual(test_message, published_message)
 
         # an invalid message should raise an error
-        # TODO: write a test validating messages
+        invalid_message = {}
+        self.network.publish(test_topic, test_message)
+        try:
+            self.assertRaises(InvalidMessageFormat, self.network.publish, test_topic, invalid_message)
+        except InvalidMessageFormat:
+            pass
 
         # an invalid topic should raise an error
         invalid_topic = "invalid_topic"

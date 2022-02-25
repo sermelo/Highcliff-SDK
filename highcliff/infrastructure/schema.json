@@ -1,3 +1,49 @@
 {
-
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "event_type": {
+      "type": "string"
+    },
+    "event_tags": {
+      "type": "array",
+      "items": {}
+    },
+    "timestamp": {
+      "type": "number"
+    },
+    "device_info": {
+      "type": "object"
+    },
+    "application_info": {
+      "type": "object"
+    },
+    "user_info": {
+      "type": "object"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "context": {
+      "type": "object"
+    },
+    "effects": {
+      "type": "object"
+    },
+    "data": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "event_type",
+    "event_tags",
+    "timestamp",
+    "device_info",
+    "application_info",
+    "user_info",
+    "environment",
+    "context",
+    "effects",
+    "data"
+  ]
 }
