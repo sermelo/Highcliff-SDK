@@ -1,5 +1,5 @@
 # needed to make local variables behave like centralized infrastructure
-from highcliff.infrastructure.singleton import Singleton
+from highcliff.singleton import Singleton
 
 # needed for message queuing and validation
 from jsonschema import validate, ValidationError
