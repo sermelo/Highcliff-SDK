@@ -7,28 +7,41 @@ from highcliff.actions.actions import ActionStatus
 from goap.planner import RegressivePlanner
 from goap.algo.astar import PathNotFoundException
 
+# used to create and access centralized infrastructure
+from highcliff.infrastructure import LocalNetwork
 
+# used to make AI a singleton
+from highcliff.singleton import Singleton
+
+
+@Singleton
 class AI:
-    __infrastructure = None
+    __network = LocalNetwork.instance()
     __goals = None
+    __diary = []
 
-    def __init__(self, infrastructure, goals, life_span_in_iterations):
-        # central infrastructure used to coordinate and communicate
-        self.__infrastructure = infrastructure
+    def network(self):
+        return self.__network
 
+    def set_goals(self, goals):
         self.__goals = goals
-        self.__diary = []
 
+    def run(self, life_span_in_iterations):
         for iteration in range(life_span_in_iterations):
             self.__run_ai()
 
+    def reset(self):
+        self.__network.reset()
+        self.__goals = None
+        self.__diary = []
+
     def __get_world_state(self):
         # this function returns the current state of the world
-        return self.__infrastructure.the_world()
+        return self.__network.the_world()
 
     def __get_capabilities(self):
         # this function returns the AI actions registered with the central infrastructure
-        return self.__infrastructure.capabilities()
+        return self.__network.capabilities()
 
     def __select_goal(self, prioritized_goals):
         # work on the next highest-priority goal that has not yet been met
@@ -40,7 +53,7 @@ class AI:
         for goal in self.__goals:
             # if the condition is not in the world, add it to the world, assume it's false, pursue the goal
             if goal not in self.__get_world_state():
-                self.__infrastructure.update_the_world({goal: False})
+                self.__network.update_the_world({goal: False})
                 selected_goal = {goal: self.__goals[goal]}
                 break
 

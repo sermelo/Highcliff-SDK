@@ -33,7 +33,7 @@ class TestAI(unittest.TestCase):
 
         # run a local version of Highcliff
         ai_life_span_in_iterations = 1
-        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+        highcliff = AI.instance()
 
         # there should be no plan
         self.assertEqual(None, highcliff.diary()[0]['my_plan'])
@@ -65,22 +65,28 @@ class TestAI(unittest.TestCase):
 
     def test_aimless_iterations(self):
         # the ai should be able to handle iterations with no goals
+
         # define a test body temperature monitor with a blank custom behavior
         class TestAction(MonitorBodyTemperature):
             def behavior(self):
                 pass
 
+        # instantiate the highcliff AI and get a reference to its infrastructure
+        highcliff = AI.instance()
+        network = highcliff.network()
+
         # instantiate the test body temperature monitor
-        TestAction(self.network)
+        TestAction(network)
 
         # define the test world state and goals
         world_update = {}
-        self.network.update_the_world(world_update)
+        network.update_the_world(world_update)
         goals = {"is_room_temperature_change_needed": True}
+        highcliff.set_goals(goals)
 
-        # run a local version of Highcliff
-        ai_life_span_in_iterations = 3
-        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+        # run the ai
+        life_span_in_iterations = 3
+        highcliff.run(life_span_in_iterations)
 
         # it only takes 1 iteration for the ai to solve the problem
         # the remaining iterations should have no goal or plan
