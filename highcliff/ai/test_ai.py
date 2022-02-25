@@ -39,7 +39,32 @@ class TestAI(unittest.TestCase):
 
     def test_aimless_iterations(self):
         # the ai should be able to handle iterations with no goals
-        pass
+        # define a test body temperature monitor with a blank custom behavior
+        class TestAction(MonitorBodyTemperature):
+            def behavior(self):
+                pass
+
+        # instantiate the test body temperature monitor
+        TestAction(self.network)
+
+        # define the test world state and goals
+        world_update = {}
+        self.network.update_the_world(world_update)
+        goals = {"is_room_temperature_change_needed": True}
+
+        # run a local version of Highcliff
+        ai_life_span_in_iterations = 3
+        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+
+        # it only takes 1 iteration for the ai to solve the problem.
+        # the remaining iterations should have no goal or plan
+        no_goal = {}
+        self.assertEqual(no_goal, highcliff.diary()[1]['my_goal'])
+        self.assertEqual(no_goal, highcliff.diary()[2]['my_goal'])
+        no_plan = []
+        self.assertEqual(no_plan, highcliff.diary()[1]['my_plan'])
+        self.assertEqual(no_plan, highcliff.diary()[2]['my_plan'])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -307,6 +307,7 @@ class TestHighcliffExamples(unittest.TestCase):
         self.assertEqual(test_message, published_message)
 
         # an invalid message should raise an error
+        # TODO: write a test validating messages
 
         # an invalid topic should raise an error
         invalid_topic = "invalid_topic"
