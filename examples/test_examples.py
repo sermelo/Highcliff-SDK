@@ -296,6 +296,7 @@ class TestHighcliffExamples(unittest.TestCase):
         test_message = {
             "event_type": "publish_message",
             "event_tags": [],
+            "event_source": "test_examples unit test",
             "timestamp": 1234567.89,
             "device_info": {},
             "application_info": {},

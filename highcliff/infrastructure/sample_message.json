@@ -1,6 +1,7 @@
 {
   "event_type": "",
   "event_tags": [],
+  "event_source": "",
   "timestamp": 1234567.89,
   "device_info": {},
   "application_info": {},

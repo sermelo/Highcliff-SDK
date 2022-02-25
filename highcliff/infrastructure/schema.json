@@ -9,6 +9,9 @@
       "type": "array",
       "items": {}
     },
+    "event_source": {
+      "type": "string"
+    },
     "timestamp": {
       "type": "number"
     },
@@ -37,6 +40,7 @@
   "required": [
     "event_type",
     "event_tags",
+    "event_source",
     "timestamp",
     "device_info",
     "application_info",
