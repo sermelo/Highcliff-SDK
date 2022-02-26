@@ -20,7 +20,7 @@ class TestBodyTemperatureMonitor(MonitorBodyTemperature):
 
 
 # instantiate the test body temperature monitor
-test_body_temperature_monitor = TestBodyTemperatureMonitor(network)
+TestBodyTemperatureMonitor(network)
 
 # define the test world state and goals
 network.update_the_world({})
