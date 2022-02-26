@@ -1,8 +1,6 @@
 # needed to run a local version of the AI
 from highcliff.ai import AI
 
-from highcliff.actions import ActionStatus
-
 # get a reference to the ai and its network
 highcliff = AI.instance()
 network = highcliff.network()

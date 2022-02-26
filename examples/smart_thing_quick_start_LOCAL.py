@@ -1,39 +1,30 @@
-# needed to run a local version Highcliff
+# needed to run a local version of the AI
 from highcliff.ai import AI
 
-# needed to run and access the infrastructure needed to communicate and coordinate
-from highcliff.infrastructure import LocalNetwork
+from highcliff.actions import ActionStatus
 
-# the Highcliff action you wish to implement
-from highcliff.exampleactions import AuthorizeRoomTemperatureChange
+# the Highcliff actions to be tested
+from highcliff.exampleactions import MonitorBodyTemperature, AuthorizeRoomTemperatureChange, ChangeRoomTemperature
 
-# needed to pretty-print the AI's execution logs
-from pprint import pprint
-
-# define the infrastructure that provides the message queue functionality
-network = LocalNetwork.instance()
+# get a reference to the ai and its network
+highcliff = AI.instance()
+network = highcliff.network()
 
 
-# build functionality by writing custom behavior for your selected actions
-class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
+# execute a single action with a single goal
+
+# define a test body temperature monitor
+class TestBodyTemperatureMonitor(MonitorBodyTemperature):
     def behavior(self):
-        print("Ask Peter if he's okay with raising the temperature in the room")
-        print("Peter gave the okay to raise the room's temperature")
-        return self.effects
+        print("We are now monitoring body temperature")
 
 
-# launch functionality by instantiating the action
-SimulatedUserInterface(network)
+# instantiate the test body temperature monitor
+test_body_temperature_monitor = TestBodyTemperatureMonitor(network)
 
-# start the world with the necessary state
-world_update = {"is_room_temperature_comfortable": False, "is_room_temperature_change_authorized": False}
-network.update_the_world(world_update)
+# define the test world state and goals
+network.update_the_world({})
 
 # run a local version of Highcliff
-ai_life_span_in_iterations = 1
-goals = {"is_room_temperature_change_authorized": True}
-highcliff = AI(network, goals, ai_life_span_in_iterations)
-
-# check the execution logs
-print()
-pprint(highcliff.diary())
+highcliff.set_goals({"is_room_temperature_change_needed": True})
+highcliff.run(life_span_in_iterations=1)
