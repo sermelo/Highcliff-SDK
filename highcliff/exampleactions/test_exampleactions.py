@@ -14,7 +14,7 @@ class MyTestCase(unittest.TestCase):
         self.highcliff.reset()
 
     def test_end_to_end_scenario(self):
-        # test that the ai can create a two-step plan to execute multiple actions to reach a goal
+        # test that the ai can create a plan to execute multiple actions and reach a goal
 
         class TestBodyTemperatureMonitor(MonitorBodyTemperature):
             def behavior(self):
@@ -35,8 +35,9 @@ class MyTestCase(unittest.TestCase):
         TestChangeRoomTemperature(self.highcliff)
 
         # define the test world state and goals
+        goal = {"is_room_temperature_comfortable": True}
         self.network.update_the_world({})
-        self.highcliff.set_goals({"is_room_temperature_comfortable": True})
+        self.highcliff.set_goals(goal)
 
         # run a local version of Highcliff
         self.highcliff.run(life_span_in_iterations=3)
@@ -47,8 +48,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(1, len(self.highcliff.diary()[2]['my_plan']))
 
         # in the third iteration, the ai should have reached it's goal
-        highcliff_reached_its_goal = intent_is_real({"is_room_temperature_comfortable": True},
-                                                    self.highcliff.diary()[2]['the_world_state_after'])
+        highcliff_reached_its_goal = intent_is_real(goal, self.highcliff.diary()[2]['the_world_state_after'])
         self.assertTrue(highcliff_reached_its_goal)
 
 
