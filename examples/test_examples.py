@@ -5,7 +5,7 @@ import unittest
 from highcliff.infrastructure import InvalidTopic, InvalidMessageFormat
 
 # needed to run a local version of the AI
-from highcliff.ai import AI
+from highcliff.ai import AI, intent_is_real
 
 from highcliff.actions import ActionStatus
 
@@ -146,20 +146,6 @@ class TestHighcliffExamples(unittest.TestCase):
         # the action should complete unsuccessfully
         self.assertEqual(ActionStatus.FAIL, self.highcliff.diary()[0]['action_status'])
 
-    @staticmethod
-    def __is_subset_dictionary(subset_dictionary, superset_dictionary):
-        is_subset = True
-        for key in subset_dictionary:
-            try:
-                if subset_dictionary[key] != superset_dictionary[key]:
-                    # there is a value in the subset not in the superset
-                    is_subset = False
-            except KeyError:
-                # there is a key in the subset not in the superset
-                is_subset = False
-
-        return is_subset
-
     def test_running_a_one_step_plan(self):
         # test that the ai can create a one-step plan to execute a single action with a single goal
 
@@ -192,8 +178,8 @@ class TestHighcliffExamples(unittest.TestCase):
         self.assertEqual(test_body_temperature_monitor, self.highcliff.diary()[0]['my_plan'][0].action)
 
         # the diary should have recorded that the world changed to reflect the goal state
-        world_state_after_matches_goals = self.__is_subset_dictionary({"is_room_temperature_change_needed": True},
-                                                                      self.highcliff.diary()[0]['the_world_state_after'])
+        world_state_after_matches_goals = intent_is_real({"is_room_temperature_change_needed": True},
+                                                         self.highcliff.diary()[0]['the_world_state_after'])
         self.assertTrue(world_state_after_matches_goals)
 
     def test_running_a_two_step_plan(self):
@@ -228,8 +214,8 @@ class TestHighcliffExamples(unittest.TestCase):
         self.assertEqual(1, len(self.highcliff.diary()[1]['my_plan']))
 
         # in the second iteration, the ai should have reached it's goal
-        highcliff_reached_its_goal = self.__is_subset_dictionary({"is_room_temperature_change_authorized": True},
-                                                                 self.highcliff.diary()[1]['the_world_state_after'])
+        highcliff_reached_its_goal = intent_is_real({"is_room_temperature_change_authorized": True},
+                                                    self.highcliff.diary()[1]['the_world_state_after'])
         self.assertTrue(highcliff_reached_its_goal)
 
     def test_a_three_step_plan(self):
@@ -266,8 +252,8 @@ class TestHighcliffExamples(unittest.TestCase):
         self.assertEqual(1, len(self.highcliff.diary()[2]['my_plan']))
 
         # in the third iteration, the ai should have reached it's goal
-        highcliff_reached_its_goal = self.__is_subset_dictionary({"is_room_temperature_comfortable": True},
-                                                                 self.highcliff.diary()[2]['the_world_state_after'])
+        highcliff_reached_its_goal = intent_is_real({"is_room_temperature_comfortable": True},
+                                                    self.highcliff.diary()[2]['the_world_state_after'])
         self.assertTrue(highcliff_reached_its_goal)
 
     def test_publish_subscribe(self):

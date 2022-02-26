@@ -14,6 +14,20 @@ from highcliff.infrastructure import LocalNetwork
 from highcliff.singleton import Singleton
 
 
+def intent_is_real(intent, reality):
+    is_real = True
+    for key in intent:
+        try:
+            if intent[key] != reality[key]:
+                # there is a value in the intent not in reality
+                is_real = False
+        except KeyError:
+            # there is a key in the intent not in reality
+            is_real = False
+
+    return is_real
+
+
 @Singleton
 class AI:
     __network = LocalNetwork.instance()
@@ -82,20 +96,6 @@ class AI:
         }
         self.__diary.append(diary_entry)
 
-    @staticmethod
-    def __is_subset_dictionary(subset_dictionary, superset_dictionary):
-        is_subset = True
-        for key in subset_dictionary:
-            try:
-                if subset_dictionary[key] != superset_dictionary[key]:
-                    # there is a value in the subset not in the superset
-                    is_subset = False
-            except KeyError:
-                # there is a key in the subset not in the superset
-                is_subset = False
-
-        return is_subset
-
     def __run_ai(self):
         # select a single goal from the list of goals
         goal = self.__select_goal(self.__goals)
@@ -129,7 +129,7 @@ class AI:
 
             # the action is a success if the altered world matches the action's intended effect
             actual_effect = copy.copy(self.__get_world_state())
-            action_had_intended_effect = self.__is_subset_dictionary(intended_effect, actual_effect)
+            action_had_intended_effect = intent_is_real(intended_effect, actual_effect)
             if action_had_intended_effect:
                 action_status = ActionStatus.SUCCESS
 
