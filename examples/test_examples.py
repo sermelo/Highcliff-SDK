@@ -19,12 +19,13 @@ global published_message
 
 class TestHighcliffExamples(unittest.TestCase):
     def setUp(self):
-        # define the infrastructure used to coordinate and communicate
-        self.network = LocalNetwork.instance()
+        # get a reference to the ai and its network
+        self.highcliff = AI.instance()
+        self.network = self.highcliff.network()
 
     def tearDown(self):
-        # reset the infrastructure
-        self.network.reset()
+        # reset the ai
+        self.highcliff.reset()
 
     def test_custom_behavior_is_required(self):
         # an error should be thrown if an action's custom behavior is not defined
@@ -112,16 +113,14 @@ class TestHighcliffExamples(unittest.TestCase):
         TestSucceededAction(self.network)
 
         # define the test world state and goals
-        world_update = {}
-        self.network.update_the_world(world_update)
-        goals = {"is_room_temperature_change_needed": True}
+        self.network.update_the_world({})
+        self.highcliff.set_goals({"is_room_temperature_change_needed": True})
 
         # run a local version of Highcliff
-        ai_life_span_in_iterations = 1
-        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+        self.highcliff.run(life_span_in_iterations=1)
 
         # the action should complete unsuccessfully
-        self.assertEqual(ActionStatus.SUCCESS, highcliff.diary()[0]['action_status'])
+        self.assertEqual(ActionStatus.SUCCESS, self.highcliff.diary()[0]['action_status'])
 
     def test_action_notifies_failure(self):
         # an action that does not have the intended effect should record a failure
@@ -138,16 +137,14 @@ class TestHighcliffExamples(unittest.TestCase):
         TestFailedAction(self.network)
 
         # define the test world state and goals
-        world_update = {"is_body_temperature_monitored": False}
-        self.network.update_the_world(world_update)
-        goals = {"is_body_temperature_monitored": True}
+        self.network.update_the_world({"is_body_temperature_monitored": False})
+        self.highcliff.set_goals({"is_body_temperature_monitored": True})
 
         # run a local version of Highcliff
-        ai_life_span_in_iterations = 1
-        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+        self.highcliff.run(life_span_in_iterations=1)
 
         # the action should complete unsuccessfully
-        self.assertEqual(ActionStatus.FAIL, highcliff.diary()[0]['action_status'])
+        self.assertEqual(ActionStatus.FAIL, self.highcliff.diary()[0]['action_status'])
 
     @staticmethod
     def __is_subset_dictionary(subset_dictionary, superset_dictionary):
@@ -175,30 +172,28 @@ class TestHighcliffExamples(unittest.TestCase):
         test_body_temperature_monitor = TestBodyTemperatureMonitor(self.network)
 
         # define the test world state and goals
-        world_update = {}
-        self.network.update_the_world(world_update)
-        goals = {"is_room_temperature_change_needed": True}
+        self.network.update_the_world({})
+        self.highcliff.set_goals({"is_room_temperature_change_needed": True})
 
         # run a local version of Highcliff
-        ai_life_span_in_iterations = 1
-        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+        self.highcliff.run(life_span_in_iterations=1)
 
         # the action should complete successfully
-        self.assertEqual(ActionStatus.SUCCESS, highcliff.diary()[0]['action_status'])
+        self.assertEqual(ActionStatus.SUCCESS, self.highcliff.diary()[0]['action_status'])
 
         # the goal should have been recorded in the diary
-        self.assertEqual(goals, highcliff.diary()[0]['my_goal'])
+        self.assertEqual({"is_room_temperature_change_needed": True}, self.highcliff.diary()[0]['my_goal'])
 
         # the ai should have devised a one-step plan
         expected_plan_steps = 1
-        self.assertEqual(expected_plan_steps, len(highcliff.diary()[0]['my_plan']))
+        self.assertEqual(expected_plan_steps, len(self.highcliff.diary()[0]['my_plan']))
 
         # the plan should have been to monitor body temperature
-        self.assertEqual(test_body_temperature_monitor, highcliff.diary()[0]['my_plan'][0].action)
+        self.assertEqual(test_body_temperature_monitor, self.highcliff.diary()[0]['my_plan'][0].action)
 
         # the diary should have recorded that the world changed to reflect the goal state
-        world_state_after_matches_goals = self.__is_subset_dictionary(goals,
-                                                                      highcliff.diary()[0]['the_world_state_after'])
+        world_state_after_matches_goals = self.__is_subset_dictionary({"is_room_temperature_change_needed": True},
+                                                                      self.highcliff.diary()[0]['the_world_state_after'])
         self.assertTrue(world_state_after_matches_goals)
 
     def test_running_a_two_step_plan(self):
@@ -223,18 +218,18 @@ class TestHighcliffExamples(unittest.TestCase):
         # define the test world state and goals
         world_update = {"is_body_temperature_monitored": False, "is_room_temperature_change_authorized": False}
         self.network.update_the_world(world_update)
-        goals = {"is_room_temperature_change_authorized": True}
+        self.highcliff.set_goals({"is_room_temperature_change_authorized": True})
 
         # run a local version of Highcliff
-        ai_life_span_in_iterations = 2
-        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+        self.highcliff.run(life_span_in_iterations=2)
 
         # the plan should have started with two steps, then progress to a single step
-        self.assertEqual(2, len(highcliff.diary()[0]['my_plan']))
-        self.assertEqual(1, len(highcliff.diary()[1]['my_plan']))
+        self.assertEqual(2, len(self.highcliff.diary()[0]['my_plan']))
+        self.assertEqual(1, len(self.highcliff.diary()[1]['my_plan']))
 
         # in the second iteration, the ai should have reached it's goal
-        highcliff_reached_its_goal = self.__is_subset_dictionary(goals, highcliff.diary()[1]['the_world_state_after'])
+        highcliff_reached_its_goal = self.__is_subset_dictionary({"is_room_temperature_change_authorized": True},
+                                                                 self.highcliff.diary()[1]['the_world_state_after'])
         self.assertTrue(highcliff_reached_its_goal)
 
     def test_a_three_step_plan(self):
@@ -259,21 +254,20 @@ class TestHighcliffExamples(unittest.TestCase):
         TestChangeRoomTemperature(self.network)
 
         # define the test world state and goals
-        world_update = {}
-        self.network.update_the_world(world_update)
-        goals = {"is_room_temperature_comfortable": True}
+        self.network.update_the_world({})
+        self.highcliff.set_goals({"is_room_temperature_comfortable": True})
 
         # run a local version of Highcliff
-        ai_life_span_in_iterations = 3
-        highcliff = AI(self.network, goals, ai_life_span_in_iterations)
+        self.highcliff.run(life_span_in_iterations=3)
 
         # the plan should have started with two steps, then progress to a single step
-        self.assertEqual(3, len(highcliff.diary()[0]['my_plan']))
-        self.assertEqual(2, len(highcliff.diary()[1]['my_plan']))
-        self.assertEqual(1, len(highcliff.diary()[2]['my_plan']))
+        self.assertEqual(3, len(self.highcliff.diary()[0]['my_plan']))
+        self.assertEqual(2, len(self.highcliff.diary()[1]['my_plan']))
+        self.assertEqual(1, len(self.highcliff.diary()[2]['my_plan']))
 
         # in the third iteration, the ai should have reached it's goal
-        highcliff_reached_its_goal = self.__is_subset_dictionary(goals, highcliff.diary()[2]['the_world_state_after'])
+        highcliff_reached_its_goal = self.__is_subset_dictionary({"is_room_temperature_comfortable": True},
+                                                                 self.highcliff.diary()[2]['the_world_state_after'])
         self.assertTrue(highcliff_reached_its_goal)
 
     def test_publish_subscribe(self):
