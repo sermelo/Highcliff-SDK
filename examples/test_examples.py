@@ -2,7 +2,7 @@ import copy
 import unittest
 
 # needed to connect to the central infrastructure
-from highcliff.infrastructure import LocalNetwork, InvalidTopic, InvalidMessageFormat
+from highcliff.infrastructure import InvalidTopic, InvalidMessageFormat
 
 # needed to run a local version of the AI
 from highcliff.ai import AI

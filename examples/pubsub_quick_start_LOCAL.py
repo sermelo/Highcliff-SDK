@@ -1,26 +1,39 @@
-# needed to run and access the infrastructure needed to communicate and coordinate
-from highcliff.infrastructure import LocalNetwork
+# needed to run a local version of the AI
+from highcliff.ai import AI
 
-# define the infrastructure that provides the message queue functionality
-network = LocalNetwork.instance()
+from highcliff.actions import ActionStatus
 
-# define the topic to which we will publish/subscribe
-topic_something_on_my_ear = "0020"
+# get a reference to the ai and its network
+highcliff = AI.instance()
+network = highcliff.network()
 
-
-# this is the function that will be run when a message is published to our topic
-def callback(topic, message):
-    print("on the topic of: ", topic)
-    print("we received this message: ", message)
+# create a topic
+test_topic = "test_topic"
+network.create_topic(test_topic)
 
 
-# create and subscribe to the topic
-network.create_topic(topic_something_on_my_ear)
-network.subscribe(topic_something_on_my_ear, callback)
+# create a callback function to test publishing
+def test_callback(topic, message):
+    print("published this message: ", message)
+    print("to this topic: ", topic)
 
-# publish a message to the topic
+
+# subscribe to the test topic
+network.subscribe(test_topic, test_callback)
+
+# publish a message to the subscribed topic
 test_message = {
-    "payload": "this is a test message",
-    "effects": {"first_effect": True, "second_effect": True}
+    "event_type": "publish_message",
+    "event_tags": [],
+    "event_source": "test_examples unit test",
+    "timestamp": 1234567.89,
+    "device_info": {},
+    "application_info": {},
+    "user_info": {},
+    "environment": "test",
+    "context": {},
+    "effects": {},
+    "data": {}
 }
-network.publish(topic_something_on_my_ear, test_message)
+
+network.publish(test_topic, test_message)
