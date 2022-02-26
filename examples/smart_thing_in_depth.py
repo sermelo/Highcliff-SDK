@@ -16,7 +16,7 @@ class TestBodyTemperatureMonitor(MonitorBodyTemperature):
         print("monitoring body temperature")
 
 
-TestBodyTemperatureMonitor(network)
+TestBodyTemperatureMonitor(highcliff)
 
 
 class TestAuthorizeRoomTemperatureChange(AuthorizeRoomTemperatureChange):
@@ -24,7 +24,7 @@ class TestAuthorizeRoomTemperatureChange(AuthorizeRoomTemperatureChange):
         print("getting permission to change the room temperature")
 
 
-TestAuthorizeRoomTemperatureChange(network)
+TestAuthorizeRoomTemperatureChange(highcliff)
 
 
 class TestChangeRoomTemperature(ChangeRoomTemperature):
@@ -32,7 +32,7 @@ class TestChangeRoomTemperature(ChangeRoomTemperature):
         print("changing the room temperature")
 
 
-TestChangeRoomTemperature(network)
+TestChangeRoomTemperature(highcliff)
 
 
 # define the world state, set goals, and run the ai

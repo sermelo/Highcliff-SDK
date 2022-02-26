@@ -20,7 +20,7 @@ class TestBodyTemperatureMonitor(MonitorBodyTemperature):
 
 
 # instantiate the test body temperature monitor
-TestBodyTemperatureMonitor(network)
+TestBodyTemperatureMonitor(highcliff)
 
 # define the test world state and goals
 network.update_the_world({})
