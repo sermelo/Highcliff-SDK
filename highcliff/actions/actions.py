@@ -7,12 +7,12 @@ from enum import Enum
 
 class AIaction(Action):
 
-    # central infrastructure used for communication and coordination
-    __infrastructure = None
+    # ai that calls the action when needed
+    __ai = None
 
-    def __init__(self, infrastructure):
-        # set a reference to the central infrastructure
-        self.__infrastructure = infrastructure
+    def __init__(self, ai):
+        # set a reference to the artificial intelligence
+        self.__ai = ai
 
         # an action integrates itself with the communication infrastructure
         self.__integrate()
@@ -22,11 +22,11 @@ class AIaction(Action):
 
     def __integrate(self):
         # as part of integration, an action registers itself as a capability for highcliff
-        self.__infrastructure.add_capability(self)
+        self.__ai.add_capability(self)
 
     def update_the_world(self, update):
         # update the world state of highcliff
-        self.__infrastructure.update_the_world(update)
+        self.__ai.network().update_the_world(update)
 
     def act(self):
         # every AI action runs custom behavior, updates the world, and returns a result

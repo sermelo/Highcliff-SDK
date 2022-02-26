@@ -11,7 +11,6 @@ class TestAI(unittest.TestCase):
     def setUp(self):
         # get a reference to the ai and its network
         self.highcliff = AI.instance()
-        self.network = self.highcliff.network()
 
     def tearDown(self):
         # reset the ai
@@ -39,7 +38,7 @@ class TestAI(unittest.TestCase):
                 pass
 
         # instantiate the test body temperature monitor in the first ai
-        test_action = TestAction(network_of_first_ai)
+        test_action = TestAction(self.highcliff)
 
         # both the first and second ai should have the test action as a capability
         self.assertEqual(test_action, first_ai.capabilities()[0])
@@ -79,10 +78,11 @@ class TestAI(unittest.TestCase):
                 pass
 
         # instantiate the test body temperature monitor
-        TestAction(self.network)
+        TestAction(self.highcliff)
 
         # define the test world state and goals
-        self.network.update_the_world({})
+        network = self.highcliff.network()
+        network.update_the_world({})
         self.highcliff.set_goals({"goal_not_in_the_test_action": True})
 
         # run a local version of Highcliff
@@ -101,10 +101,11 @@ class TestAI(unittest.TestCase):
                 pass
 
         # instantiate the test body temperature monitor
-        TestBodyTemperatureMonitor(self.network)
+        TestBodyTemperatureMonitor(self.highcliff)
 
         # define the network's world state and the AI's goals
-        self.network.update_the_world({})
+        network = self.highcliff.network()
+        network.update_the_world({})
         self.highcliff.set_goals({"is_room_temperature_change_needed": True})
 
         # run the ai
@@ -123,10 +124,11 @@ class TestAI(unittest.TestCase):
                 pass
 
         # instantiate the action
-        TestAction(self.network)
+        TestAction(self.highcliff)
 
         # define the network's world state and the AI's goals
-        self.network.update_the_world({})
+        network = self.highcliff.network()
+        network.update_the_world({})
         self.highcliff.set_goals({"is_room_temperature_change_needed": True})
 
         # run the ai
