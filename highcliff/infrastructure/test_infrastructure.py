@@ -15,12 +15,6 @@ class TestInfrastructure(unittest.TestCase):
         world_is_not_empty = len(local_network.the_world()) > 0
         self.assertTrue(world_is_not_empty)
 
-        # add capabilities and check that capabilities are not empty
-        dummy_action = "dummy action"
-        local_network.add_capability(dummy_action)
-        capabilities_are_not_empty = len(local_network.capabilities()) > 0
-        self.assertTrue(capabilities_are_not_empty)
-
         # add a topic and check that the topics are not empty
         dummy_topic = "dummy_topic"
         local_network.create_topic(dummy_topic)
@@ -34,13 +28,9 @@ class TestInfrastructure(unittest.TestCase):
         reset_world = {}
         self.assertEqual(reset_world, local_network.the_world())
 
-        # check that the capabilities have been reset
-        reset_capabilities = []
-        self.assertEqual(reset_capabilities, local_network.capabilities())
-
         # check that the topics have been reset
         reset_topics = []
-        self.assertEqual(reset_capabilities, local_network.topics())
+        self.assertEqual(reset_topics, local_network.topics())
 
     def test_local_infrastructure(self):
 
@@ -61,17 +51,6 @@ class TestInfrastructure(unittest.TestCase):
         first_local_network.update_the_world(world_update)
         self.assertEqual(world_update, first_local_network.the_world())
         self.assertEqual(world_update, second_local_network.the_world())
-
-        # the capabilities in both networks should initially be empty
-        expected_capabilities = []
-        self.assertEqual(expected_capabilities, first_local_network.capabilities())
-        self.assertEqual(expected_capabilities, second_local_network.capabilities())
-
-        # update the capabilities in the first network and check for the same update in the second network
-        action = "dummy action"
-        first_local_network.add_capability(action)
-        self.assertEqual(action, first_local_network.capabilities()[0])
-        self.assertEqual(action, second_local_network.capabilities()[0])
 
         # the topics in both networks should initially be empty
         expected_topics = []

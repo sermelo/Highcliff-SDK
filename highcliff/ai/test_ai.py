@@ -18,6 +18,7 @@ class TestAI(unittest.TestCase):
         self.highcliff.reset()
 
     def test_shared_ai_reference(self):
+        # TODO: think about duplicating this to create a test for resetting
         # create two instances of the ai
         first_ai = AI.instance()
         second_ai = AI.instance()
@@ -27,13 +28,22 @@ class TestAI(unittest.TestCase):
 
         network_of_first_ai = first_ai.network()
 
+        # the capabilities in AIs should initially be empty
+        expected_capabilities = []
+        self.assertEqual(expected_capabilities, first_ai.capabilities())
+        self.assertEqual(expected_capabilities, second_ai.capabilities())
+
         # define a test body temperature monitor with a blank custom behavior
         class TestAction(MonitorBodyTemperature):
             def behavior(self):
                 pass
 
-        # instantiate the test body temperature monitor
-        TestAction(network_of_first_ai)
+        # instantiate the test body temperature monitor in the first ai
+        test_action = TestAction(network_of_first_ai)
+
+        # both the first and second ai should have the test action as a capability
+        self.assertEqual(test_action, first_ai.capabilities()[0])
+        self.assertEqual(test_action, second_ai.capabilities()[0])
 
         # define the test world state and goals
         network_of_first_ai.update_the_world({})
@@ -50,6 +60,9 @@ class TestAI(unittest.TestCase):
 
         # reset the ai
         first_ai.reset()
+
+        # the capabilities of the ai should be gone
+        self.assertEqual([], first_ai.capabilities())
 
         # the content of the ai diary should be gone
         self.assertEqual([], first_ai.diary())

@@ -18,6 +18,7 @@ from highcliff.singleton import Singleton
 class AI:
     __network = LocalNetwork.instance()
     __goals = None
+    __capabilities = []
     __diary = []
 
     def network(self):
@@ -25,6 +26,12 @@ class AI:
 
     def set_goals(self, goals):
         self.__goals = goals
+
+    def capabilities(self):
+        return self.__capabilities
+
+    def add_capability(self, action):
+        self.__capabilities.append(action)
 
     def run(self, life_span_in_iterations):
         for iteration in range(life_span_in_iterations):
@@ -34,14 +41,11 @@ class AI:
         self.__network.reset()
         self.__goals = None
         self.__diary = []
+        self.__capabilities = []
 
     def __get_world_state(self):
         # this function returns the current state of the world
         return self.__network.the_world()
-
-    def __get_capabilities(self):
-        # this function returns the AI actions registered with the central infrastructure
-        return self.__network.capabilities()
 
     def __select_goal(self, prioritized_goals):
         # work on the next highest-priority goal that has not yet been met
@@ -97,7 +101,7 @@ class AI:
         goal = self.__select_goal(self.__goals)
 
         # create a plan to achieve the selected goal
-        planner = RegressivePlanner(self.__get_world_state(), self.__get_capabilities())
+        planner = RegressivePlanner(self.__get_world_state(), self.capabilities())
 
         # start by assuming that there is no plan, the action will have no effect and will fail
         plan = None

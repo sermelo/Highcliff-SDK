@@ -27,12 +27,6 @@ class Network:
     def update_the_world(self, update):
         raise NotImplementedError
 
-    def capabilities(self):
-        raise NotImplementedError
-
-    def add_capability(self, action):
-        raise NotImplementedError
-
     def create_topic(self, topic):
         raise NotImplementedError
 
@@ -46,7 +40,6 @@ class Network:
 @Singleton
 class LocalNetwork(Network):
     __the_world = {}
-    __capabilities = []
     __message_queue = {}
 
     # refer to the package schema file in the host
@@ -59,12 +52,6 @@ class LocalNetwork(Network):
 
     def update_the_world(self, update):
         self.__the_world.update(update)
-
-    def capabilities(self):
-        return self.__capabilities
-
-    def add_capability(self, action):
-        self.__capabilities.append(action)
 
     def create_topic(self, topic):
         self.__message_queue[topic] = []
@@ -95,7 +82,6 @@ class LocalNetwork(Network):
     def reset(self):
         # clears all state
         self.__the_world = {}
-        self.__capabilities = []
         self.__message_queue = {}
 
     def __validate_topic(self, topic):
