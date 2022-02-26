@@ -49,7 +49,7 @@ class TestHighcliffExamples(unittest.TestCase):
                 pass
 
         # instantiate the test action
-        test_action = TestAction(self.network)
+        test_action = TestAction(self.highcliff)
 
         # check the effects of the test action
         expected_effects = {"is_room_temperature_change_needed": True}
@@ -76,7 +76,7 @@ class TestHighcliffExamples(unittest.TestCase):
         self.network.update_the_world(dummy_condition)
 
         # instantiate the test action
-        test_action = TestAction(self.network)
+        test_action = TestAction(self.highcliff)
         expected_known_world = {**self.network.the_world(), **test_action.effects}
 
         # take an action and test to see if that action properly affected the world
@@ -93,14 +93,14 @@ class TestHighcliffExamples(unittest.TestCase):
 
         # test that the capabilities registry is currently empty
         no_capabilities = []
-        self.assertEqual(no_capabilities, self.network.capabilities())
+        self.assertEqual(no_capabilities, self.highcliff.capabilities())
 
         # instantiate the test action
-        test_action = TestAction(self.network)
+        test_action = TestAction(self.highcliff)
 
         # test to see if the test action properly registered itself as a new capability
-        self.assertTrue(len(self.network.capabilities()) == 1)
-        self.assertEqual(test_action, self.network.capabilities()[0])
+        self.assertTrue(len(self.highcliff.capabilities()) == 1)
+        self.assertEqual(test_action, self.highcliff.capabilities()[0])
 
     def test_action_notifies_success(self):
         # an action that has the intended effect should record a success
@@ -110,7 +110,7 @@ class TestHighcliffExamples(unittest.TestCase):
             def behavior(self):
                 pass
 
-        TestSucceededAction(self.network)
+        TestSucceededAction(self.highcliff)
 
         # define the test world state and goals
         self.network.update_the_world({})
@@ -134,7 +134,7 @@ class TestHighcliffExamples(unittest.TestCase):
             def behavior(self):
                 self.action_failure()
 
-        TestFailedAction(self.network)
+        TestFailedAction(self.highcliff)
 
         # define the test world state and goals
         self.network.update_the_world({"is_body_temperature_monitored": False})
@@ -169,7 +169,7 @@ class TestHighcliffExamples(unittest.TestCase):
                 pass
 
         # instantiate the test body temperature monitor
-        test_body_temperature_monitor = TestBodyTemperatureMonitor(self.network)
+        test_body_temperature_monitor = TestBodyTemperatureMonitor(self.highcliff)
 
         # define the test world state and goals
         self.network.update_the_world({})
@@ -205,7 +205,7 @@ class TestHighcliffExamples(unittest.TestCase):
                 pass
 
         # instantiate the test body temperature monitor
-        TestBodyTemperatureMonitor(self.network)
+        TestBodyTemperatureMonitor(self.highcliff)
 
         # define a test body authorization application with a blank custom behavior
         class TestAuthorizationApp(AuthorizeRoomTemperatureChange):
@@ -213,7 +213,7 @@ class TestHighcliffExamples(unittest.TestCase):
                 pass
 
         # instantiate the test authorization app
-        TestAuthorizationApp(self.network)
+        TestAuthorizationApp(self.highcliff)
 
         # define the test world state and goals
         world_update = {"is_body_temperature_monitored": False, "is_room_temperature_change_authorized": False}
@@ -239,19 +239,19 @@ class TestHighcliffExamples(unittest.TestCase):
             def behavior(self):
                 pass
 
-        TestBodyTemperatureMonitor(self.network)
+        TestBodyTemperatureMonitor(self.highcliff)
 
         class TestAuthorizeRoomTemperatureChange(AuthorizeRoomTemperatureChange):
             def behavior(self):
                 pass
 
-        TestAuthorizeRoomTemperatureChange(self.network)
+        TestAuthorizeRoomTemperatureChange(self.highcliff)
 
         class TestChangeRoomTemperature(ChangeRoomTemperature):
             def behavior(self):
                 pass
 
-        TestChangeRoomTemperature(self.network)
+        TestChangeRoomTemperature(self.highcliff)
 
         # define the test world state and goals
         self.network.update_the_world({})
