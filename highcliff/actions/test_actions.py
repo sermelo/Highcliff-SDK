@@ -28,7 +28,7 @@ class UnsuccessfulAction(TestAction):
         self.failure()
 
 
-class TestActions(unittest.TestCase):
+class TestAIActions(unittest.TestCase):
     def setUp(self):
         # get a reference to the ai and its network
         self.highcliff = AI.instance()
@@ -63,7 +63,7 @@ class TestActions(unittest.TestCase):
 
         # the action should not have the intended effect on the world
         unintended_effect = {"test_action_complete": False}
-        self.assertEqual(unintended_effect, test_unsuccessful_action.effects)
+        self.assertEqual(unintended_effect, self.network.the_world())
 
     def test_preconditions_and_effects_of_a_successful_action(self):
         # the preconditions and effects should be as expected before running the action

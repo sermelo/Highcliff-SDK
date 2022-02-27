@@ -4,6 +4,9 @@ from goap.action import Action
 # defines action status
 from enum import Enum
 
+# needed to copy the intended effects into the actual effects
+import copy
+
 
 class AIaction(Action):
 
@@ -33,7 +36,7 @@ class AIaction(Action):
 
     def act(self):
         # assume that the act will have the intended effect
-        self.actual_effects = self.effects
+        self.actual_effects = copy.copy(self.effects)
 
         # every AI action runs custom behavior. this behavior may change the actual effects
         self.behavior()
