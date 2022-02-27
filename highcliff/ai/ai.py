@@ -97,6 +97,7 @@ class AI:
         self.__diary.append(diary_entry)
 
     def __run_ai(self):
+        # todo: go through this and get rid of unnecessary updates
         # select a single goal from the list of goals
         goal = self.__select_goal(self.__goals)
 
@@ -142,7 +143,7 @@ class AI:
             pass
 
         # record the results of this iteration
-        self.__reflect(goal, world_state_snapshot, plan, action_status, actual_effect)
+        self.__reflect(goal, world_state_snapshot, plan, action_status, self.__get_world_state())
 
     def diary(self):
         return self.__diary

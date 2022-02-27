@@ -17,8 +17,11 @@ class AIaction(Action):
         # an action integrates itself with the communication infrastructure
         self.__integrate()
 
-        # the effect that the action actually had on the world
+        # the intended effect of the action on the world
         self.effects = {}
+
+        # the actual effect of the action on the world
+        self.actual_effects = None
 
     def __integrate(self):
         # as part of integration, an action registers itself as a capability for highcliff
@@ -29,9 +32,12 @@ class AIaction(Action):
         self.__ai.network().update_the_world(update)
 
     def act(self):
-        # every AI action runs custom behavior, updates the world, and returns a result
+        # assume that the act will have the intended effect
+        self.actual_effects = self.effects
+
+        # every AI action runs custom behavior. this behavior may change the actual effects
         self.behavior()
-        self.update_the_world(self.effects)
+        self.update_the_world(self.actual_effects)
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action

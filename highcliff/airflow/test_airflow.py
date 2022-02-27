@@ -1,77 +1,95 @@
+import pprint
 import unittest
-from pprint import pprint
+from highcliff.airflow import MonitorAirflow, AuthorizeAirflowAdjustment, AdjustAirflow
+from highcliff.ai import AI, intent_is_real
 
-there_is_a_problem_with_airflow = False
-user_denied_request_to_adjust_the_vent = False
+global airflow_sensor_reading_counter
+global user_authorization_counter
 
-capabilities = []
+
+def fake_airflow_sensor_reading():
+    global airflow_sensor_reading_counter
+
+    # sensor reading counter cycles between 1 and 3
+    airflow_sensor_reading_counter += 1
+    if airflow_sensor_reading_counter > 3:
+        airflow_sensor_reading_counter = 1
+
+    # the read out cycles between okay and too high
+    sensor_readout = {
+        1: "okay",
+        2: "okay",
+        3: "too high"
+    }
+
+    return sensor_readout[airflow_sensor_reading_counter]
+
+
+def fake_user_authorization_response():
+    global user_authorization_counter
+
+    # user authorization counter cycles between 1 and 2
+    user_authorization_counter += 1
+    if user_authorization_counter > 2:
+        user_authorization_counter = 1
+
+    # the user authentication response cycles between yes and no
+    user_response = {
+        1: "yes",
+        2: "no"
+    }
+
+    return user_response[user_authorization_counter]
 
 
 class TestAirflow(unittest.TestCase):
-
     def setUp(self):
-        # use the SDK to monitor and manage air flow in the room
-        from highcliff.airflow import MonitorAirflow, AuthorizeAirflowAdjustment, AdjustAirflow
-        from highcliff.ai import AI
+        # get a reference to the ai and its network
+        self.highcliff = AI.instance()
+        self.network = self.highcliff.network()
 
-        # create an air vent sensor
-        class AirVentSensor(MonitorAirflow):
+    def tearDown(self):
+        # reset the ai
+        self.highcliff.reset()
+
+    def test_end_to_end_scenario(self):
+        # test that the ai can create a plan to execute multiple actions and reach a goal
+
+        global airflow_sensor_reading_counter
+        global user_authorization_counter
+
+        airflow_sensor_reading_counter = 0
+        user_authorization_counter = 0
+
+        class TestAirflowMonitor(MonitorAirflow):
             def behavior(self):
-                # take a sensor reading
+                print("fake sensor readout")
+                print(fake_airflow_sensor_reading())
+                self.no_adjustment_needed()
 
-                if there_is_a_problem_with_airflow:
-                    # make it known that the sensor found a problem with the air flow
-                    super().adjustment_needed()
+        TestAirflowMonitor(self.highcliff)
 
-                    # log the problem
-                else:
-                    # do nothing if the sensor finds that the air flow is fine
-                    # log the sensor readings
-                    pass
-
-        # create a UI that authorizes an adjustment to the air vent
-        class AirVentUI(AuthorizeAirflowAdjustment):
-            def behavior(self):
-                if user_denied_request_to_adjust_the_vent:
-                    super().authorization_failed()
-                else:
-                    pass
-
-        # create an actuator capable of adjusting the air vent
-        class AirVentActuator(AdjustAirflow):
+        class TestAuthorizeAirflowChange(AuthorizeAirflowAdjustment):
             def behavior(self):
                 pass
 
-        # set up the initial state of the world for Highcliff
-        # this is only necessary if you are running a local version of Highcliff
-        the_world = {
-            "problem_with_airflow": True
-        }
+        TestAuthorizeAirflowChange(self.highcliff)
 
-        # give Highcliff its goals
-        goals = {
-            "problem_with_airflow": False
-        }
+        class TestChangeAirflow(AdjustAirflow):
+            def behavior(self):
+                pass
 
-        # instantiate the air vent sensor
-        AirVentSensor(the_world_global_variable=the_world, capabilities_global_variable=capabilities)
+        TestChangeAirflow(self.highcliff)
 
-        # instantiate the authorization UI
-        AirVentUI(the_world_global_variable=the_world, capabilities_global_variable=capabilities)
-
-        # instantiate the air vent actuator
-        AirVentActuator(the_world_global_variable=the_world, capabilities_global_variable=capabilities)
+        # define the test world state and goals
+        goal = {"is_airflow_comfortable": True}
+        self.network.update_the_world({})
+        self.highcliff.set_goals(goal)
 
         # run a local version of Highcliff
-        ai_life_span_in_iterations = 1
-        self.highcliff = AI(the_world_global_variable=the_world, capabilities_global_variable=capabilities,
-                            goals=goals, life_span_in_iterations=ai_life_span_in_iterations)
+        self.highcliff.run(life_span_in_iterations=5)
 
-        # output Highcliff's diary
-        pprint(self.highcliff.diary())
-
-    def test_maintain_comfortable_airflow(self):
-        self.assertEqual(str(self.highcliff.diary()[0]['action_status']), "ActionStatus.SUCCESS")
+        pprint.pprint(self.highcliff.diary())
 
 
 if __name__ == '__main__':

@@ -2,40 +2,45 @@ from highcliff.actions.actions import AIaction
 
 
 class MonitorAirflow(AIaction):
-    effects = {"monitor_airflow": True, "problem_with_airflow": False}
-    preconditions = {"monitor_airflow": False}
+    def __init__(self, ai):
+        super().__init__(ai)
+        self.effects = {"is_airflow_adjustment_needed": True}
+        self.preconditions = {}
 
     def behavior(self):
-        # decide if medication is needed and update the world accordingly
+        # decide if adjustment is needed and update the world accordingly
         raise NotImplementedError
 
-    def adjustment_needed(self):
-        # this should be called by custom behavior if it determines that adjustment is needed
-        self.effects["problem_with_airflow"] = True
+    def no_adjustment_needed(self):
+        # this should be called by custom behavior if it determines that no adjustment is needed
+        self.actual_effects["is_airflow_adjustment_needed"] = False
 
 
 class AuthorizeAirflowAdjustment(AIaction):
-    effects = {"airflow_adjustment_authorized": True}
-    preconditions = {"problem_with_airflow": True}
+    def __init__(self, ai):
+        super().__init__(ai)
+        self.effects = {"is_airflow_adjustment_authorized": True}
+        self.preconditions = {"is_airflow_adjustment_needed": True}
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action
         raise NotImplementedError
 
     def authorization_failed(self):
-        # this should be by custom behavior if it fails to confirm that the proper maintenance was given
-        self.effects["airflow_adjustment_authorized"] = False
-        self.effects["problem_with_airflow"] = True
+        # this should be called by custom behavior if it fails to authorize the adjustment
+        self.effects["is_airflow_adjustment_authorized"] = False
 
 
 class AdjustAirflow(AIaction):
-    effects = {"problem_with_airflow": False}
-    preconditions = {"airflow_adjustment_authorized": True}
+    def __init__(self, ai):
+        super().__init__(ai)
+        self.effects = {"is_airflow_comfortable": True}
+        self.preconditions = {"is_airflow_adjustment_authorized": True}
 
     def behavior(self):
         # custom behavior must be specified by anyone implementing an AI action
         raise NotImplementedError
 
-    def __adjustment_failed(self):
+    def adjustment_failed(self):
         # this should be called by custom behavior if it fails to complete the adjustment
-        self.effects["problems_with_airflow"] = True
+        self.effects["is_airflow_comfortable"] = False
