@@ -35,8 +35,8 @@ def fake_user_authorization_response():
 
     # the user authentication response cycles between yes and no
     user_response = {
-        1: "yes",
-        2: "no"
+        1: "no",
+        2: "yes"
     }
 
     return user_response[user_authorization_counter]
@@ -63,15 +63,18 @@ class TestAirflow(unittest.TestCase):
 
         class TestAirflowMonitor(MonitorAirflow):
             def behavior(self):
-                print("fake sensor readout")
-                print(fake_airflow_sensor_reading())
-                self.no_adjustment_needed()
+                # no adjustment needed if the sensor says that the airflow is okay
+                if fake_airflow_sensor_reading() == "okay":
+                    self.no_adjustment_needed()
 
         TestAirflowMonitor(self.highcliff)
 
         class TestAuthorizeAirflowChange(AuthorizeAirflowAdjustment):
             def behavior(self):
-                pass
+                print("authorization response")
+                print(fake_user_authorization_response())
+                if fake_user_authorization_response() == "no":
+                    self.authorization_failed()
 
         TestAuthorizeAirflowChange(self.highcliff)
 
@@ -87,7 +90,7 @@ class TestAirflow(unittest.TestCase):
         self.highcliff.set_goals(goal)
 
         # run a local version of Highcliff
-        self.highcliff.run(life_span_in_iterations=5)
+        self.highcliff.run(life_span_in_iterations=8)
 
         pprint.pprint(self.highcliff.diary())
 

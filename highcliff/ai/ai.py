@@ -143,7 +143,8 @@ class AI:
             pass
 
         # record the results of this iteration
-        self.__reflect(goal, world_state_snapshot, plan, action_status, self.__get_world_state())
+        # todo: replace the 'after' world state with a copy
+        self.__reflect(goal, world_state_snapshot, plan, action_status, copy.copy(self.__get_world_state()))
 
     def diary(self):
         return self.__diary

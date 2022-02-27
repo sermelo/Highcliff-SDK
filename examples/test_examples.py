@@ -1,4 +1,5 @@
 import copy
+import pprint
 import unittest
 
 # needed to connect to the central infrastructure
@@ -250,6 +251,12 @@ class TestHighcliffExamples(unittest.TestCase):
         self.assertEqual(3, len(self.highcliff.diary()[0]['my_plan']))
         self.assertEqual(2, len(self.highcliff.diary()[1]['my_plan']))
         self.assertEqual(1, len(self.highcliff.diary()[2]['my_plan']))
+
+        # spot check the contents of the diary
+        self.assertEqual(2, len(self.highcliff.diary()[0]['the_world_state_after']))
+        self.assertEqual(3, len(self.highcliff.diary()[1]['the_world_state_after']))
+        self.assertEqual(False, self.highcliff.diary()[1]['the_world_state_after']['is_room_temperature_comfortable'])
+        self.assertEqual(True, self.highcliff.diary()[2]['the_world_state_after']['is_room_temperature_comfortable'])
 
         # in the third iteration, the ai should have reached it's goal
         highcliff_reached_its_goal = intent_is_real({"is_room_temperature_comfortable": True},
