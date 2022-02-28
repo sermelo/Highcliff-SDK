@@ -22,9 +22,9 @@ Highcliff is given a static set of goals designed to maintain a person's wellbei
 
 ## Quick Start
 1. Install Python
-1. Clone this repository
-1. Run `\examples\smart_thing_quick_start.py`
-1. You should see the following output:
+2. Clone this repository
+3. Run `\examples\smart_thing_quick_start.py`
+4. You should see the following output:
 ```
 We are now monitoring body temperature
 ```
@@ -123,6 +123,7 @@ We are now monitoring body temperature
 ## Roadmap
 
 - [ ] Release the beta Python version
+- [ ] Integrate beta Python version with AWS CMD Reference Cut Down Architecture
 - [ ] Test the beta Python version in a full hackathon
 - [ ] Release version 1
 - [ ] Release versions in other languages
