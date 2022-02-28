@@ -71,8 +71,6 @@ class TestAirflow(unittest.TestCase):
 
         class TestAuthorizeAirflowChange(AuthorizeAirflowAdjustment):
             def behavior(self):
-                print("authorization response")
-                print(fake_user_authorization_response())
                 if fake_user_authorization_response() == "no":
                     self.authorization_failed()
 
@@ -93,6 +91,8 @@ class TestAirflow(unittest.TestCase):
         self.highcliff.run(life_span_in_iterations=8)
 
         pprint.pprint(self.highcliff.diary())
+
+        # spot check the diary for the results
 
 
 if __name__ == '__main__':

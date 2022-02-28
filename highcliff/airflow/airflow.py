@@ -28,7 +28,7 @@ class AuthorizeAirflowAdjustment(AIaction):
 
     def authorization_failed(self):
         # this should be called by custom behavior if it fails to authorize the adjustment
-        self.effects["is_airflow_adjustment_authorized"] = False
+        self.actual_effects["is_airflow_adjustment_authorized"] = False
 
 
 class AdjustAirflow(AIaction):
@@ -43,4 +43,4 @@ class AdjustAirflow(AIaction):
 
     def adjustment_failed(self):
         # this should be called by custom behavior if it fails to complete the adjustment
-        self.effects["is_airflow_comfortable"] = False
+        self.actual_effects["is_airflow_comfortable"] = False

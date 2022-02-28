@@ -144,7 +144,7 @@ class AI:
 
         # record the results of this iteration
         # todo: replace the 'after' world state with a copy
-        self.__reflect(goal, world_state_snapshot, plan, action_status, copy.copy(self.__get_world_state()))
+        self.__reflect(copy.copy(goal), world_state_snapshot, copy.copy(plan), copy.copy(action_status), copy.copy(self.__get_world_state()))
 
     def diary(self):
         return self.__diary
