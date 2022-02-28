@@ -23,121 +23,102 @@ Highcliff is given a static set of goals designed to maintain a person's wellbei
 ## Quick Start
 1. Install Python
 1. Clone this repository
-1. Run `\examples\smart_thing_quick_start_LOCAL.py`
+1. Run `\examples\smart_thing_quick_start.py`
 1. You should see the following output:
 ```
-Ask Peter if he's okay with raising the temperature in the room
-Peter gave the okay to raise the room's temperature
-
-[{'action_status': <ActionStatus.SUCCESS: 'success'>,
-  'my_goal': {'is_room_temperature_change_authorized': True},
-  'my_plan': [PlanStep(action=<__main__.SimulatedUserInterface object at 0x000001FA0D9578B0>, services={})],
-  'the_world_state_after': {'is_room_temperature_change_authorized': True,
-                            'is_room_temperature_comfortable': False},
-  'the_world_state_before': {'is_room_temperature_change_authorized': False,
-                             'is_room_temperature_comfortable': False}}]
+We are now monitoring body temperature
 ```
 
 ### The Complete Quick Start Code
 
-```
-# needed to run a local version Highcliff
+```python
+# needed to run a local version of the AI
 from highcliff.ai import AI
 
-# the Highcliff action you wish to implement
-from highcliff.exampleactions import AuthorizeRoomTemperatureChange
+# the Highcliff actions to be tested
+from highcliff.exampleactions import MonitorBodyTemperature
 
-# needed to pretty-print the AI's execution logs
-from pprint import pprint
-
-# define the state of the world and the ai capabilities.
-# when running a local version of Highcliff, use global variables to simulate underlying infrastructure
-# these global variables will be replaced with urls in the production version
-the_world_GLOBAL_VARIABLE = {"is_room_temperature_change_authorized": False, "is_room_temperature_comfortable": False}
-capabilities_GLOBAL_VARIABLE = []
+# get a reference to the ai and its network
+highcliff = AI.instance()
+network = highcliff.network()
 
 
-# build functionality by writing custom behavior for your selected actions
-class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
+# execute a single action with a single goal:
+
+# define a test body temperature monitor
+class TestBodyTemperatureMonitor(MonitorBodyTemperature):
     def behavior(self):
-        print("Ask Peter if he's okay with raising the temperature in the room")
-        print("Peter gave the okay to raise the room's temperature")
-        return self.effects
+        print("We are now monitoring body temperature")
 
 
-# launch functionality by instantiating the action
-SimulatedUserInterface(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
+# instantiate the test body temperature monitor
+TestBodyTemperatureMonitor(highcliff)
 
+# define the test world state and goals
+network.update_the_world({})
 
 # run a local version of Highcliff
-ai_life_span_in_iterations = 1
-goals = {"is_room_temperature_change_authorized": True}
-highcliff = AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+highcliff.set_goals({"is_room_temperature_change_needed": True})
+highcliff.run(life_span_in_iterations=1)
 
-# check the execution logs
-print()
-pprint(highcliff.diary())
 ```
 
 ### Explaining the Quick Start
 
-To use this SDK and run your solution on your local machine, start by importing the Highcliff AI and the specific Highcliff actions you intend to implement.
+To use this SDK and run your solution on your local machine, start by importing the Highcliff AI and the specific Highcliff action you intend to implement.
 
-```
-# needed to run a local version Highcliff
+```python
+# needed to run a local version of the AI
 from highcliff.ai import AI
 
-# the Highcliff action you wish to implement
-from highcliff.exampleactions import AuthorizeRoomTemperatureChange
-
-# needed to pretty-print the AI's execution logs
-from pprint import pprint
+# the Highcliff actions to be tested
+from highcliff.exampleactions import MonitorBodyTemperature
 ```
 
-Create global variables that represent the state of the world and the actions that the AI is capable of executing. These variables are used by the SDK to simulate a connection to a central infrastructure responsible for providing the same information.
+Create a reference to the artificial intelligence. Use the AI to get a reference to its underlying infrastructure.
 
-```
-the_world_GLOBAL_VARIABLE = {"is_room_temperature_change_authorized": False, "is_room_temperature_comfortable": False}
-capabilities_GLOBAL_VARIABLE = []
+```python
+# get a reference to the ai and its network
+highcliff = AI.instance()
+network = highcliff.network()
 ```
 
 Write the custom behavior for any action that you imported.
 
-```
-class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
+```python
+class TestBodyTemperatureMonitor(MonitorBodyTemperature):
     def behavior(self):
-        print("Ask Peter if he's okay with raising the temperature in the room")
-        print("Peter gave the okay to raise the room's temperature")
-        return self.effects
+        print("We are now monitoring body temperature")
 ```
 
-Instantiate your new action. When running locally, the action should be instantiated using the global variables that simulate central infrastructure.
+Instantiate your new action. Be sure to pass the new action a reference to the AI that will be controlling the action.
 
-```
-SimulatedUserInterface(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
+```python
+TestBodyTemperatureMonitor(highcliff)
 ```
 
-Instantiate and run the Highcliff AI. When running locally, the AI should be instantiated uising the global variables that simulate central infrastructure.
+Use the infrastructure reference to define the current state of the world. In the quick start example, we started with an empty world `{}`. Set goals for the AI. Run the AI. As part of the AI run, specify the number of iterations the AI is to run before terminating.
 
-```
-ai_life_span_in_iterations = 1
-goals = {"is_room_temperature_change_authorized": True}
-highcliff = AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+```python
+# define the test world state and goals
+network.update_the_world({})
+
+# run a local version of Highcliff
+highcliff.set_goals({"is_room_temperature_change_needed": True})
+highcliff.run(life_span_in_iterations=1)
 ```
 
 The AI will select a goal, create a plan, and (if properly configured) select and run your action. You should see the custom behavior you specified running locally.
 
 ```
-Ask Peter if he's okay with raising the temperature in the room
-Peter gave the okay to raise the room's temperature
+We are now monitoring body temperature
 ```
 
 ## More Examples
 ### Other Quick Starts
-* `smart_thing_in_depth_LOCAL` provides an example of...
-
-### Unit Tests
-Unit tests are a good source of example smart-thing development code. Each Python module contains a unit test. The `setUp` method of each test provides an example of how to use the classes in that module. For example...
+* `ai_quick_start` provides an example of how to run an instance of the artificial intelligence engine
+* `pubsub_quick_start` provides an example of how to use the infrastructure to publsih and subscribe to messages
+* `smart_thing_in_depth` provides an example of to use the ai with multiple actions
 
 ## Roadmap
 
