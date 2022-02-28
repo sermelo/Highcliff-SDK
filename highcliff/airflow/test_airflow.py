@@ -1,7 +1,8 @@
 import pprint
 import unittest
 from highcliff.airflow import MonitorAirflow, AuthorizeAirflowAdjustment, AdjustAirflow
-from highcliff.ai import AI, intent_is_real
+from highcliff.ai import AI
+from highcliff.actions import ActionStatus
 
 global airflow_sensor_reading_counter
 global user_authorization_counter
@@ -90,9 +91,28 @@ class TestAirflow(unittest.TestCase):
         # run a local version of Highcliff
         self.highcliff.run(life_span_in_iterations=8)
 
-        pprint.pprint(self.highcliff.diary())
+        # did the ai recognize obstacles
+        self.assertEqual(ActionStatus.FAIL, self.highcliff.diary()[0]["action_status"])
+        self.assertEqual(ActionStatus.FAIL, self.highcliff.diary()[1]["action_status"])
+        self.assertEqual(ActionStatus.SUCCESS, self.highcliff.diary()[2]["action_status"])
+        self.assertEqual(ActionStatus.FAIL, self.highcliff.diary()[3]["action_status"])
+        self.assertEqual(ActionStatus.SUCCESS, self.highcliff.diary()[4]["action_status"])
+        self.assertEqual(ActionStatus.SUCCESS, self.highcliff.diary()[5]["action_status"])
+        self.assertEqual(ActionStatus.SUCCESS, self.highcliff.diary()[6]["action_status"])
+        self.assertEqual(ActionStatus.SUCCESS, self.highcliff.diary()[7]["action_status"])
 
-        # spot check the diary for the results
+        # did the ai make progress
+        self.assertEqual(3, len(self.highcliff.diary()[2]["my_plan"]))
+        self.assertEqual(2, len(self.highcliff.diary()[4]["my_plan"]))
+        self.assertEqual(1, len(self.highcliff.diary()[5]["my_plan"]))
+        self.assertEqual(0, len(self.highcliff.diary()[6]["my_plan"]))
+
+        # did the ai reach the goal
+        self.assertEqual(True, self.highcliff.diary()[6]["the_world_state_after"]["is_airflow_comfortable"])
+
+        # did the ai stop after reaching the goal
+        self.assertEqual(0, len(self.highcliff.diary()[6]["my_plan"]))
+        self.assertEqual(0, len(self.highcliff.diary()[7]["my_plan"]))
 
 
 if __name__ == '__main__':
