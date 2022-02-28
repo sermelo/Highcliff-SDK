@@ -119,7 +119,6 @@ We are now monitoring body temperature
 * `ai_quick_start` provides an example of how to run an instance of the artificial intelligence engine
 * `pubsub_quick_start` provides an example of how to use the infrastructure to publsih and subscribe to messages
 * `smart_thing_in_depth` provides an example of to use the ai with multiple actions
-* 
 
 ## Roadmap
 
