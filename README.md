@@ -116,10 +116,10 @@ We are now monitoring body temperature
 
 ## More Examples
 ### Other Quick Starts
-* `smart_thing_in_depth_LOCAL` provides an example of...
-
-### Unit Tests
-Unit tests are a good source of example smart-thing development code. Each Python module contains a unit test. The `setUp` method of each test provides an example of how to use the classes in that module. For example...
+* `ai_quick_start` provides an example of how to run an instance of the artificial intelligence engine
+* `pubsub_quick_start` provides an example of how to use the infrastructure to publsih and subscribe to messages
+* `smart_thing_in_depth` provides an example of to use the ai with multiple actions
+* 
 
 ## Roadmap
 
