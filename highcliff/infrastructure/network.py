@@ -22,18 +22,24 @@ class Network:
         pass
 
     def the_world(self):
+        # returns a dictionary that describes the current state of the world
         raise NotImplementedError
 
     def update_the_world(self, update):
+        # adds the given update to the persistent store of the world state
         raise NotImplementedError
 
     def create_topic(self, topic):
+        # creates the given topic in the centralized message queue
         raise NotImplementedError
 
     def publish(self, topic, message):
+        # uses the centralized message queue to publish the given message to the given topic
         raise NotImplementedError
 
     def subscribe(self, topic, callback_function):
+        # registers the given callback function to be called by the centralized message queue
+        # when a message is published to the given topic
         raise NotImplementedError
 
 
