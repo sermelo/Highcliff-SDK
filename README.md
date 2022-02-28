@@ -23,60 +23,44 @@ Highcliff is given a static set of goals designed to maintain a person's wellbei
 ## Quick Start
 1. Install Python
 1. Clone this repository
-1. Run `\examples\smart_thing_quick_start_LOCAL.py`
+1. Run `\examples\smart_thing_quick_start.py`
 1. You should see the following output:
 ```
-Ask Peter if he's okay with raising the temperature in the room
-Peter gave the okay to raise the room's temperature
-
-[{'action_status': <ActionStatus.SUCCESS: 'success'>,
-  'my_goal': {'is_room_temperature_change_authorized': True},
-  'my_plan': [PlanStep(action=<__main__.SimulatedUserInterface object at 0x000001FA0D9578B0>, services={})],
-  'the_world_state_after': {'is_room_temperature_change_authorized': True,
-                            'is_room_temperature_comfortable': False},
-  'the_world_state_before': {'is_room_temperature_change_authorized': False,
-                             'is_room_temperature_comfortable': False}}]
+We are now monitoring body temperature
 ```
 
 ### The Complete Quick Start Code
 
 ```
-# needed to run a local version Highcliff
+# needed to run a local version of the AI
 from highcliff.ai import AI
 
-# the Highcliff action you wish to implement
-from highcliff.exampleactions import AuthorizeRoomTemperatureChange
+# the Highcliff actions to be tested
+from highcliff.exampleactions import MonitorBodyTemperature
 
-# needed to pretty-print the AI's execution logs
-from pprint import pprint
-
-# define the state of the world and the ai capabilities.
-# when running a local version of Highcliff, use global variables to simulate underlying infrastructure
-# these global variables will be replaced with urls in the production version
-the_world_GLOBAL_VARIABLE = {"is_room_temperature_change_authorized": False, "is_room_temperature_comfortable": False}
-capabilities_GLOBAL_VARIABLE = []
+# get a reference to the ai and its network
+highcliff = AI.instance()
+network = highcliff.network()
 
 
-# build functionality by writing custom behavior for your selected actions
-class SimulatedUserInterface(AuthorizeRoomTemperatureChange):
+# execute a single action with a single goal:
+
+# define a test body temperature monitor
+class TestBodyTemperatureMonitor(MonitorBodyTemperature):
     def behavior(self):
-        print("Ask Peter if he's okay with raising the temperature in the room")
-        print("Peter gave the okay to raise the room's temperature")
-        return self.effects
+        print("We are now monitoring body temperature")
 
 
-# launch functionality by instantiating the action
-SimulatedUserInterface(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE)
+# instantiate the test body temperature monitor
+TestBodyTemperatureMonitor(highcliff)
 
+# define the test world state and goals
+network.update_the_world({})
 
 # run a local version of Highcliff
-ai_life_span_in_iterations = 1
-goals = {"is_room_temperature_change_authorized": True}
-highcliff = AI(the_world_GLOBAL_VARIABLE, capabilities_GLOBAL_VARIABLE, goals, ai_life_span_in_iterations)
+highcliff.set_goals({"is_room_temperature_change_needed": True})
+highcliff.run(life_span_in_iterations=1)
 
-# check the execution logs
-print()
-pprint(highcliff.diary())
 ```
 
 ### Explaining the Quick Start
