@@ -31,7 +31,7 @@ We are now monitoring body temperature
 
 ### The Complete Quick Start Code
 
-```
+```python
 # needed to run a local version of the AI
 from highcliff.ai import AI
 
