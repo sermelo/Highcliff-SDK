@@ -1,0 +1,12 @@
+attrs==21.4.0
+Automat==0.8.0
+decorator==5.1.1
+goap==0.3.0
+goap-ai==2.0.0
+importlib-resources==5.4.0
+jsonschema==4.4.0
+networkx==2.3
+pyrsistent==0.18.1
+six==1.16.0
+typing==3.7.4.3
+zipp==3.7.0
