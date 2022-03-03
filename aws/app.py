@@ -4,10 +4,10 @@ from cdk.data_ingest_stack import DataIngestStack
 
 # define some vars for tagging
 org = 'SMF'
-version = '1.0'
+version = '1.1'
 owner = 'dxc'
-project = 'hackathon'
-team = 'team1'
+project = 'sdk-integration'
+team = 'dev'
 
 stack_name = project + '-' + team + '-data-ingest'
 

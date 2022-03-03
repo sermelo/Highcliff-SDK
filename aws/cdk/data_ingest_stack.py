@@ -28,7 +28,8 @@ class DataIngestStack(Stack):
 
         # define cdk input parameters:
         # stack-name - all resources will include this in their name:
-        self._resource_name = self.node.try_get_context('stack-name')
+	   # GitHub Error 12 - add str() wrapper to force type
+        self._resource_name = str(self.node.try_get_context('stack-name'))
         # ec2-key - key pair to access ec2:
         self._ec2_key = self.node.try_get_context('ec2-key')
         # define other vars:
