@@ -1,0 +1,4 @@
+aws-cdk-lib==2.8.0
+aws-solutions-constructs.aws_kinesis_firehose_s3
+constructs>=10.0.0,<11.0.0
+boto3>=1.20.54

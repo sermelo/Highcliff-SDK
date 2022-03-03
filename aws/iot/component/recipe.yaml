@@ -1,0 +1,16 @@
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: dataingest.localtemperaturefeedback.__CORE_NAME__
+ComponentVersion: 1.0.0
+ComponentDescription: Sample Component
+ComponentPublisher: Publisher Name
+ComponentConfiguration:
+  DefaultConfiguration: {}
+Manifests:
+- Platform:
+    os: '*'
+  Lifecycle:
+    Run: |
+      python3 {artifacts:path}/local_temperature_feedback.py
+  Artifacts:
+  - Uri: s3://__S3_BUCKET_NAME__/local_temperature_feedback.py

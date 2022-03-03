@@ -1,0 +1,56 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetRole",
+                "iam:CreateRole",
+                "iam:PassRole",
+                "iam:CreatePolicy",
+                "iam:AttachRolePolicy",
+                "iam:getPolicy"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:GetBucketLocation",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": [
+                "arn:aws:s3:::smf-shared-resources/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iot:Publish",
+                "iot:Receive",
+                "iot:RetainPublish",
+                "iot:Subscribe",
+                "iot:Connect",
+                "iot:AttachThingPrincipal",
+                "iot:AttachPolicy",
+                "iot:AttachPrincipalPolicy"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
