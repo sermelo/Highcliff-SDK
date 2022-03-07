@@ -88,7 +88,7 @@ The following examples are deployed as part of the stack. Note: all examples are
 Stacks can be deleted by following the same procedure used to remove regular CloudFormation stacks.
 Go to [CloudFormation](https://eu-west-2.console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks), select your stack, then _Delete_.
 
-IoT Things need to be removed manually as these are not officially deployed as CloudFormation resources. Go to IoT Core [Things](https://eu-west-2.console.aws.amazon.com/iot/home?region=eu-west-2#/thinghub), then select your item, then _Delete_. Repeat the same action under [Core Devices](https://eu-west-2.console.aws.amazon.com/iot/home?region=eu-west-2#/greengrass/v2/cores). 
+IoT Things need to be removed manually as these are not officially deployed as CloudFormation resources. Go to IoT Core [Things](https://eu-west-2.console.aws.amazon.com/iot/home?region=eu-west-2#/thinghub), then select your item, then _Delete_. Repeat the same action under [Greengrass Core Devices](https://eu-west-2.console.aws.amazon.com/iot/home?region=eu-west-2#/greengrass/v2/cores). 
 
 ## Values to Change
 
