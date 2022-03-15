@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import argparse
 import csv
-import random
 from datetime import datetime
+import random
+import os
+import tempfile
 import time
+
 
 class GenerateData:
 
@@ -26,10 +29,11 @@ class GenerateData:
         # close file
         f.close()
 
-        
+
 def parse_arguments():
+    default_data_file = os.path.join(tempfile.mkdtemp(), 'temps.csv')
     parser = argparse.ArgumentParser(description="Generate random temperatures and store them in a file.")
-    parser.add_argument('--data-file', default='/home/ubuntu/temps.csv', type=str, help="File path for output data.")
+    parser.add_argument('--data-file', default=default_data_file, type=str, help="File path for output data.")
     return parser.parse_args()
 
 
@@ -38,6 +42,7 @@ def main():
     # create instance of class
     genData = GenerateData()
     # infinite loop, publishing csv data
+    print(f'Output data file: {parameters.data_file}')
     while True:
         genData._modCsv(parameters.data_file)
         time.sleep(20)
@@ -46,8 +51,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
