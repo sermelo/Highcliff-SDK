@@ -161,11 +161,11 @@ if __name__ == '__main__':
                 j['sample_time'] = sample_time
                 j['value'] = current_temp
                 message = json.dumps(j)
+                print(f'Publishing in topic {args.topic}, message: {message}')
                 mqtt_connection.publish(
                     topic=args.topic,
                     payload=message,
                     qos=mqtt.QoS.AT_LEAST_ONCE)
-
             historic_temp = current_temp
             time.sleep(1)
             publish_count += 1
