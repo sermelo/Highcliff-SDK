@@ -1,10 +1,8 @@
+import argparse
 import csv
 import random
 from datetime import datetime
 import time
-
-# small script to generate some sample data:
-# publish temperature values in csv file
 
 class GenerateData:
 
@@ -28,13 +26,19 @@ class GenerateData:
         f.close()
 
         
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Generate random temperatures and store them in a file.")
+    parser.add_argument('--data-file', default='/home/ubuntu/temps.csv', type=str, help="File path for output data.")
+    return parser.parse_args()
+
 
 def main():
+    parameters = parse_arguments()
     # create instance of class
     genData = GenerateData()
     # infinite loop, publishing csv data
     while True:
-        genData._modCsv('/home/ubuntu/temps.csv')
+        genData._modCsv(parameters.data_file)
         time.sleep(20)
         
 
