@@ -56,7 +56,7 @@ The following examples are deployed as part of the stack. Note: all examples are
 
 2. `monitor_temps.py`: located under _/home/ubuntu_ on the ec2 instance. This example publishes the temperature data from 'temps.csv' to the 'test/temperatures' mqtt messsage topic. It can be ran using the following command:
     ```
-    ubuntu@ip:~# python3 monitor_temps.py --client-id=<unique-name-for-device> --topic=<unique-topic-name>
+    ubuntu@ip:~# ./monitor_temps.py --client-id=<unique-name-for-device> --topic=<unique-topic-name>
     ```
     The data will be published to the topic, with the 'device_id' field containing the value supplied as '--client-id'.
 
