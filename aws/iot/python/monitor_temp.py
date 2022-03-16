@@ -26,13 +26,6 @@ parser.add_argument('--root-ca', default='/home/ubuntu/certs/AmazonRootCA1.pem',
 parser.add_argument('--client-id', required=True, default="test-" + str(uuid4()), help="Client ID for MQTT connection: use 'device' found in /home/ubuntu/vars")
 parser.add_argument('--topic', default="test/temperatures", help="Topic to subscribe to, and publish messages to.")
 parser.add_argument('--count', default=0, type=int, help="Number of messages to publish/receive before exiting.")
-parser.add_argument('--use-websocket', default=False, action='store_true',
-    help="To use a websocket instead of raw mqtt. If you " +
-    "specify this option you must specify a region for signing.")
-parser.add_argument('--signing-region', default='us-east-1', help="If you specify --use-web-socket, this " +
-    "is the region that will be used for computing the Sigv4 signature")
-parser.add_argument('--proxy-host', help="Hostname of proxy to connect to.")
-parser.add_argument('--proxy-port', type=int, default=8080, help="Port of proxy to connect to.")
 parser.add_argument('--verbosity', choices=[x.name for x in io.LogLevel], default=io.LogLevel.NoLogs.name,
     help='Logging level')
 # New arg for input data file
