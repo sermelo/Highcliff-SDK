@@ -14,26 +14,54 @@ import csv
 
 # This sample is based off the aws 'pubsub.py' example:
 # https://github.com/aws/aws-iot-device-sdk-python-v2/blob/main/samples/pubsub.py
+def parse_args():
+    parser = argparse.ArgumentParser(description="Send and receive messages through and MQTT connection.")
+    # CHANGE PER SUBSCRIPTION ENDPOINT FOUND IN IOT CORE > SETTINGS
+    parser.add_argument(
+        '--endpoint',
+        default="a15645u9kev0b1-ats.iot.eu-west-2.amazonaws.com",
+        help="Your AWS IoT custom endpoint, not including a port. " +
+             "Ex: \"abcd123456wxyz-ats.iot.us-east-1.amazonaws.com\""
+    )
+    parser.add_argument(
+        '--port', default=8883, type=int,
+        help="Specify port. AWS IoT supports 443 and 8883."
+    )
+    parser.add_argument(
+        '--cert', default='/home/ubuntu/certs/certificate.pem.crt',
+        help="File path to your client certificate, in PEM format."
+    )
+    parser.add_argument(
+        '--key', default='/home/ubuntu/certs/private.pem.key',
+        help="File path to your private key, in PEM format."
+    )
+    parser.add_argument(
+        '--root-ca', default='/home/ubuntu/certs/AmazonRootCA1.pem',
+        help="File path to root certificate authority, in PEM format."
+    )
+    parser.add_argument(
+        '--client-id', default="test-" + str(uuid4()),
+        help="Client ID for MQTT connection: use 'device' found in /home/ubuntu/vars"
+    )
+    parser.add_argument(
+        '--topic', default="test/temperatures",
+        help="Topic to subscribe to, and publish messages to."
+    )
+    parser.add_argument(
+        '--count', default=0, type=int,
+        help="Number of messages to publish/receive before exiting."
+    )
+    parser.add_argument(
+        '--data-file', default='temps.csv', type=str,
+        help="File path for input data."
+    )
+    parser.add_argument(
+        '--verbosity', choices=[x.name for x in io.LogLevel],
+        default=io.LogLevel.NoLogs.name, help='Logging level'
+    )
+    return parser.parse_args()
 
-parser = argparse.ArgumentParser(description="Send and receive messages through and MQTT connection.")
-# CHANGE PER SUBSCRIPTION ENDPOINT FOUND IN IOT CORE > SETTINGS
-parser.add_argument('--endpoint', default="a15645u9kev0b1-ats.iot.eu-west-2.amazonaws.com", help="Your AWS IoT custom endpoint, not including a port. " +
-                                                      "Ex: \"abcd123456wxyz-ats.iot.us-east-1.amazonaws.com\"")
-parser.add_argument('--port', default=8883, type=int, help="Specify port. AWS IoT supports 443 and 8883.")
-parser.add_argument('--cert', default='/home/ubuntu/certs/certificate.pem.crt', help="File path to your client certificate, in PEM format.")
-parser.add_argument('--key', default='/home/ubuntu/certs/private.pem.key', help="File path to your private key, in PEM format.")
-parser.add_argument('--root-ca', default='/home/ubuntu/certs/AmazonRootCA1.pem', help="File path to root certificate authority, in PEM format.")
-parser.add_argument('--client-id', required=True, default="test-" + str(uuid4()), help="Client ID for MQTT connection: use 'device' found in /home/ubuntu/vars")
-parser.add_argument('--topic', default="test/temperatures", help="Topic to subscribe to, and publish messages to.")
-parser.add_argument('--count', default=0, type=int, help="Number of messages to publish/receive before exiting.")
-parser.add_argument('--verbosity', choices=[x.name for x in io.LogLevel], default=io.LogLevel.NoLogs.name,
-    help='Logging level')
-# New arg for input data file
-parser.add_argument('--data-file', default='temps.csv', type=str, help="File path for input data.")
-
-# Using globals to simplify sample code
-args = parser.parse_args()
-
+args = parse_args()
 io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
 
 received_count = 0
