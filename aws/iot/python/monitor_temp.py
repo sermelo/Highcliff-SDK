@@ -3,9 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0.
 
 import argparse
-from datetime import datetime
-from operator import delitem
-from awscrt import io, mqtt, auth, http
+from awscrt import io, mqtt
 from awsiot import mqtt_connection_builder
 import sys
 import threading
