@@ -8,7 +8,7 @@ from goap.planner import RegressivePlanner
 from goap.algo.astar import PathNotFoundException
 
 # used to create and access centralized infrastructure
-from highcliff.infrastructure import LocalNetwork
+from highcliff.infrastructure import LocalNetwork, MqttNetwork
 
 # used to make AI a singleton
 from highcliff.singleton import Singleton
@@ -30,7 +30,7 @@ def intent_is_real(intent, reality):
 
 @Singleton
 class AI:
-    __network = LocalNetwork.instance()
+    __network = MqttNetwork.instance() #LocalNetwork.instance()
     __goals = None
     __capabilities = []
     __diary = []
