@@ -56,21 +56,26 @@ The following examples are deployed as part of the stack. Note: all examples are
 
 2. `monitor_temps.py`: located under _/home/ubuntu_ on the ec2 instance. This example publishes the temperature data from 'temps.csv' to the 'test/temperatures' mqtt messsage topic. It can be ran using the following command:
     ```
-    ubuntu@ip:~# python3 monitor_temps.py --client-id=<unique-name-for-device> --topic=<unique-topic-name>
+    ubuntu@ip:~# ./monitor_temps.py --client-id=<unique-name-for-device> --topic=<unique-topic-name>
     ```
     The data will be published to the topic, with the 'device_id' field containing the value supplied as '--client-id'.
 
     Note: _--topic_ should match the topic subscribed to by your lambda function.
  
-3. `IoT Rule: push data to dyanamodb`: this rule obtains data from the 'test/temperatures' topic using the following SQL command:
+3. `monitor_topic.py`: located under _/home/ubuntu_ on the ec2 instance. This example subscribe to the desired topic, or, by default, to all topics:
+    ```
+    ubuntu@ip:~# ./monitor_topic.py
+    ```
+
+4. `IoT Rule: push data to dyanamodb`: this rule obtains data from the 'test/temperatures' topic using the following SQL command:
     ```
     select * from 'test/temperatures'
     ```
     The returned json data is the split into fields which are pushed as columns to dynamobd.
     
-4. `Lambda (cloud): temperature_feedback.py`: this reads the dynamodb table, detecting any rows containing a type of 'temperature'. Depending on the stored value, a message will be published to the _'test/temperatures-control'_ mqtt topic with a corresponding action. Scheduled by a CloudWatch event to run every 2 minutes.
+5. `Lambda (cloud): temperature_feedback.py`: this reads the dynamodb table, detecting any rows containing a type of 'temperature'. Depending on the stored value, a message will be published to the _'test/temperatures-control'_ mqtt topic with a corresponding action. Scheduled by a CloudWatch event to run every 2 minutes.
 
-5. `Lambda (on local device): local_temperature_feedback.py`: publishes the same data as _'temperature_feedback.py'_, but runs locally on the device to directly reads temperature data. 
+6. `Lambda (on local device): local_temperature_feedback.py`: publishes the same data as _'temperature_feedback.py'_, but runs locally on the device to directly reads temperature data. 
     
     The requirements for this can be found in the repo under _~/iot/component_: _pack.sh_ is used to package the function into a zip file, which is then uploaded to s3 as part of the stack operations. The s3 location and function execution path are specified in _recipe.yaml_.
 
