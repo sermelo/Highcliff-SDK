@@ -5,9 +5,6 @@ import random
 from things import Thing
 
 class Thermometer(Thing):
-    def __init__(self, region, endpoint, device_id, publish_delay, world_topic):
-        super().__init__(region, endpoint, device_id, 'thermometer', publish_delay, world_topic)
-
     @classmethod
     def get_data(cls):
         return round(random.uniform(35.5, 42.5), 1)
@@ -15,21 +12,32 @@ class Thermometer(Thing):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Generate random temperatures and publish them.")
+    parser.add_argument('--device-id', default='thermometer-livingroom', type=str, help='Device id')
     parser.add_argument('--topic', default='world', type=str, help='MQtt topic.')
     parser.add_argument('--publish-delay', default=30, type=int, help='Time between each published message')
-    parser.add_argument('--endpoint', default='https://a15645u9kev0b1-ats.iot.eu-west-2.amazonaws.com', type=str, help='IOT MQtt endpoint.')
-    parser.add_argument('--region', default='eu-west-2', type=str, help='AWS region')
-    parser.add_argument('--device-id', default='thermometer-livingroom', type=str, help='Device id')
+    parser.add_argument(
+        '--endpoint',
+        default="a15645u9kev0b1-ats.iot.eu-west-2.amazonaws.com",
+        help="Your AWS IoT custom endpoint, not including a port. " +
+             "Ex: \"abcd123456wxyz-ats.iot.us-east-1.amazonaws.com\""
+    )
+    parser.add_argument(
+        '--cert_filepath', default='/home/ubuntu/certs/certificate.pem.crt',
+        help="File path to your client certificate, in PEM format."
+    )
+    parser.add_argument(
+        '--pri_key_filepath', default='/home/ubuntu/certs/private.pem.key',
+        help="File path to your private key, in PEM format."
+    )
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_arguments()
     thermometer = Thermometer(
-        args.region,
-        args.endpoint,
         args.device_id,
-        args.publish_delay,
         args.topic,
+        args.publish_delay,
     )
+    thermometer.connect(args.endpoint, args.cert_filepath, args.pri_key_filepath)
     thermometer.run()

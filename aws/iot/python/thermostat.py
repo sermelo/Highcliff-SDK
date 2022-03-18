@@ -5,32 +5,42 @@ from things import Thing
 
 
 class Thermostat(Thing):
-    def __init__(self, region, endpoint, device_id, publish_delay, world_topic, init_temperature):
-        super().__init__(region, endpoint, device_id, 'thermostat', publish_delay, world_topic)
+    def __init__(self, device_id, world_topic, publish_delay, init_temperature):
+        super().__init__(device_id, world_topic, publish_delay)
         self.temperature = init_temperature
 
     def get_data(self):
         return self.temperature
 
-
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Generate random temperatures and publish them.")
+    parser.add_argument('--device-id', default='thermostat-livingroom', type=str, help='Device id')
     parser.add_argument('--topic', default='world', type=str, help='MQtt topic.')
     parser.add_argument('--publish-delay', default=30, type=int, help='Time between each published message')
-    parser.add_argument('--endpoint', default='https://a15645u9kev0b1-ats.iot.eu-west-2.amazonaws.com', type=str, help='IOT MQtt endpoint.')
-    parser.add_argument('--region', default='eu-west-2', type=str, help='AWS region')
-    parser.add_argument('--device-id', default='thermostat-livingroom', type=str, help='Device id')
+    parser.add_argument(
+        '--endpoint',
+        default="a15645u9kev0b1-ats.iot.eu-west-2.amazonaws.com",
+        help="Your AWS IoT custom endpoint, not including a port. " +
+             "Ex: \"abcd123456wxyz-ats.iot.us-east-1.amazonaws.com\""
+    )
+    parser.add_argument(
+        '--cert_filepath', default='/home/ubuntu/certs/certificate.pem.crt',
+        help="File path to your client certificate, in PEM format."
+    )
+    parser.add_argument(
+        '--pri_key_filepath', default='/home/ubuntu/certs/private.pem.key',
+        help="File path to your private key, in PEM format."
+    )
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_arguments()
     thermostat = Thermostat(
-        args.region,
-        args.endpoint,
         args.device_id,
-        args.publish_delay,
         args.topic,
+        args.publish_delay,
         20,
     )
+    thermostat.connect(args.endpoint, args.cert_filepath, args.pri_key_filepath)
     thermostat.run()
