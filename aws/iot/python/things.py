@@ -10,7 +10,6 @@ from awsiot import mqtt_connection_builder
 class Thing():
     def __init__(self, device_id, world_topic='world', publish_delay=30):
         self.device_id = device_id
-        self.device_type = self.get_device_type()
         self.publish_delay = publish_delay
         self.world_topic = world_topic
         self.mqtt_client = None
@@ -70,7 +69,7 @@ class Thing():
     def publish_data(self):
         data = {
             'device_id': self.device_id,
-            'type': self.device_type,
+            'type': self.get_info_type(),
             'sample_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'value': self.get_data(),
         }
@@ -88,19 +87,27 @@ class Thing():
     def get_data(self):
         raise NotImplementedError
 
-    @classmethod
-    def get_device_type(cls):
-        return cls.__name__.lower()
+    def get_info_type(self):
+        raise NotImplementedError
 
 class Thermometer(Thing):
     @classmethod
     def get_data(cls):
         return round(random.uniform(35.5, 42.5), 1)
 
-class Thermostat(Thing):
-    def __init__(self, device_id, world_topic, publish_delay, init_temperature):
+    @classmethod
+    def get_info_type(cls):
+        return 'temperature'
+
+
+class Thermostat(InteractiveThing):
+    def __init__(self, device_id, world_topic, publish_delay, init_temperature=20):
         super().__init__(device_id, world_topic, publish_delay)
         self.temperature = init_temperature
 
     def get_data(self):
         return self.temperature
+
+    @classmethod
+    def get_info_type(cls):
+        return 'configured_temperature'
