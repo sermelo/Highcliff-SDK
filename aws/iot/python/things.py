@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import random
 import time
 
 from awscrt import io
@@ -54,3 +55,16 @@ class Thing():
     @classmethod
     def get_device_type(cls):
         return cls.__name__.lower()
+
+class Thermometer(Thing):
+    @classmethod
+    def get_data(cls):
+        return round(random.uniform(35.5, 42.5), 1)
+
+class Thermostat(Thing):
+    def __init__(self, device_id, world_topic, publish_delay, init_temperature):
+        super().__init__(device_id, world_topic, publish_delay)
+        self.temperature = init_temperature
+
+    def get_data(self):
+        return self.temperature

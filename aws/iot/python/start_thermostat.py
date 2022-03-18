@@ -1,16 +1,8 @@
 #!/usr/bin/env python3
 import argparse
 
-from things import Thing
+from things import Thermostat
 
-
-class Thermostat(Thing):
-    def __init__(self, device_id, world_topic, publish_delay, init_temperature):
-        super().__init__(device_id, world_topic, publish_delay)
-        self.temperature = init_temperature
-
-    def get_data(self):
-        return self.temperature
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Generate random temperatures and publish them.")

@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
 import argparse
-import random
 
-from things import Thing
-
-class Thermometer(Thing):
-    @classmethod
-    def get_data(cls):
-        return round(random.uniform(35.5, 42.5), 1)
+from things import Thermometer
 
 
 def parse_arguments():
