@@ -3,7 +3,7 @@ import json
 import random
 import time
 
-from awscrt import io
+from awscrt import io, mqtt
 from awsiot import mqtt_connection_builder
 
 
@@ -90,6 +90,64 @@ class Thing():
     def get_info_type(self):
         raise NotImplementedError
 
+
+class InteractiveThing(Thing):
+    def connect(self, endpoint, cert_filepath, pri_key_filepath):
+        super().connect(endpoint, cert_filepath, pri_key_filepath)
+        self.subscribe_requests_topic()
+
+    def subscribe_requests_topic(self):
+        requests_topic = f'{self.device_id}_request'
+        print(f'Subscribing to requests topic {requests_topic}')
+        self.mqtt_client.subscribe(
+            self.get_requests_topic(),
+            qos=mqtt.QoS.AT_LEAST_ONCE,
+            callback=self.receive_request
+        )
+
+    def receive_request(self, topic, payload, **kwargs):
+        data = self.preocess_payload(payload)
+        print(f'Received request in topic {topic}:\n\t{data}')
+        if self.allowed(data['device_id']):
+            self.process_request(topic, data)
+            self.publish_accepted(data)
+            self.publish_data()
+        else:
+            self.pusblish_rejected(data)
+
+    def allowed(self, device_id):
+        return True
+
+    def get_requests_topic(self):
+        return f'{self.device_id}_request'
+
+    def get_response_topic(self):
+        return f'{self.device_id}_response'
+
+    def publish_accepted(self, data):
+        self.publish_allowance(data['device_id'], True)
+
+    def publish_rejected(self, data):
+        self.publish_allowance(data['device_id'], False)
+
+    def publish_allowance(self, request_device_id, allowed):
+        data = {
+            'device_id': self.device_id,
+            'requester_device_id': request_device_id,
+            'type': self.get_info_type(),
+            'allowed': allowed,
+        }
+        self.publish(self.get_response_topic(), data)
+
+    def process_request(self, topic, payload):
+        raise NotImplementedError
+
+    @classmethod
+    def preocess_payload(cls, payload):
+        decoded_payload = str(payload.decode("utf-8", "ignore"))
+        return json.loads(decoded_payload)
+
+
 class Thermometer(Thing):
     @classmethod
     def get_data(cls):
@@ -111,3 +169,6 @@ class Thermostat(InteractiveThing):
     @classmethod
     def get_info_type(cls):
         return 'configured_temperature'
+
+    def process_request(self, topic, data):
+        self.temperature = int(data['value'])
