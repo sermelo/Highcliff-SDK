@@ -2,6 +2,9 @@ __author__ = "Jerry Overton"
 __copyright__ = "Copyright (C) 2020 appliedAIstudio"
 __version__ = "0.1"
 
+# needed to get room temperature readings
+from example_sensors import TemperatureScale, get_room_temperature
+
 # needed to run a local version of the AI
 from highcliff.ai import AI
 

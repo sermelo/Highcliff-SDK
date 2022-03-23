@@ -5,10 +5,12 @@ __version__ = "0.1"
 import pprint
 import unittest
 
-from highcliff.infrastructure import LocalNetwork
 from highcliff.exampleactions import MonitorBodyTemperature
 from highcliff.ai import AI
 from highcliff.actions import ActionStatus
+
+# needed to start up the remote ai server
+import rpyc
 
 
 class TestAI(unittest.TestCase):
@@ -21,7 +23,6 @@ class TestAI(unittest.TestCase):
         self.highcliff.reset()
 
     def test_shared_ai_reference(self):
-        # TODO: think about duplicating this to create a test for resetting
         # create two instances of the ai
         first_ai = AI.instance()
         second_ai = AI.instance()
@@ -146,6 +147,23 @@ class TestAI(unittest.TestCase):
         no_plan = []
         self.assertEqual(no_plan, self.highcliff.diary()[1]['my_plan'])
         self.assertEqual(no_plan, self.highcliff.diary()[2]['my_plan'])
+
+    def test_remote_ai_server(self):
+        # run the remote server
+        from ai_server import start_ai_server
+
+        from threading import Thread
+        ai_server_thread = Thread(target=start_ai_server)
+        ai_server_thread.start()
+
+        # create a connection
+        connection = rpyc.connect("localhost", 18861)
+
+        # verify the connection
+        ai = connection.root.get_ai_instance()
+        print(type(ai))
+
+        pass
 
 
 if __name__ == '__main__':
