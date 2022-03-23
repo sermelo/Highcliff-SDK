@@ -10,3 +10,5 @@ pyrsistent==0.18.1
 six==1.16.0
 typing==3.7.4.3
 zipp==3.7.0
+
+rpyc~=5.1.0
