@@ -11,6 +11,8 @@ from highcliff.actions import ActionStatus
 
 # needed to start up the remote ai server
 import rpyc
+from ai_server import start_ai_server
+from threading import Thread
 
 
 class TestAI(unittest.TestCase):
@@ -148,12 +150,9 @@ class TestAI(unittest.TestCase):
         self.assertEqual(no_plan, self.highcliff.diary()[1]['my_plan'])
         self.assertEqual(no_plan, self.highcliff.diary()[2]['my_plan'])
 
-    def test_remote_ai_server(self):
+    def test_run_and_connect_to_remote_ai_server(self):
         # run the remote server
-        from ai_server import start_ai_server
-
-        from threading import Thread
-        ai_server_thread = Thread(target=start_ai_server)
+        ai_server_thread = Thread(target=start_ai_server, daemon=True)
         ai_server_thread.start()
 
         # create a connection
