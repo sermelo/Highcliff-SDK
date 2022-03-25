@@ -160,9 +160,10 @@ class TestAI(unittest.TestCase):
 
         # verify the connection
         ai = connection.root.get_ai_instance()
-        print(type(ai))
 
-        pass
+        # verify that we are connected to an object of the expected type
+        expected_type_for_ai_object = "<netref class 'rpyc.core.netref.Singleton'>"
+        self.assertEqual(expected_type_for_ai_object, str(type(ai)))
 
 
 if __name__ == '__main__':
