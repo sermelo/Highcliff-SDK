@@ -52,8 +52,14 @@ class AI:
         self.__capabilities.append(action)
 
     def run(self, life_span_in_iterations):
-        for iteration in range(life_span_in_iterations):
-            self.__run_ai()
+        # if the life span is specified as some positive number, stay alive for that number of iterations
+        if life_span_in_iterations > 0:
+            for iteration in range(life_span_in_iterations):
+                self.__run_ai()
+        # if the life span is specified as -1, run forever
+        else:
+            while True:
+                self.__run_ai()
 
     def reset(self):
         self.__network.reset()

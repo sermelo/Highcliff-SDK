@@ -8,7 +8,7 @@ from example_sensors import TemperatureScale, get_room_temperature
 # needed to run a local version of the AI
 from highcliff.ai import AI
 
-# the Highcliff actions to be tested
+# the Highcliff actions we are going to implement
 from highcliff.exampleactions import MonitorBodyTemperature, AuthorizeRoomTemperatureChange, ChangeRoomTemperature
 
 # get a reference to the ai and its network

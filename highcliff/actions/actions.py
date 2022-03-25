@@ -11,6 +11,8 @@ from enum import Enum
 # needed to copy the intended effects into the actual effects
 import copy
 
+# TODO: effects and preconditions should include topics specific to the action implementation
+
 
 class AIaction(Action):
 
